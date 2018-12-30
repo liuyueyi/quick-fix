@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-example</module>
+        <module>jar-example</module>
     </modules>
 
 

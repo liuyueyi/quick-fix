@@ -1,5 +1,4 @@
-package com.git.hui.fix.example.spring.rest;
-
+package com.git.hui.fix.example.jar.server;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -8,9 +7,9 @@ import com.google.common.cache.LoadingCache;
 import java.math.BigDecimal;
 
 /**
- * Created by @author yihui in 18:36 18/12/29.
+ * Created by @author yihui in 22:53 18/12/30.
  */
-public class StaticBean {
+public class CalculateServer {
 
     private static LoadingCache<String, BigDecimal> localCache;
 
@@ -21,8 +20,6 @@ public class StaticBean {
                 return BigDecimal.ZERO;
             }
         });
-
-        localCache.put("init", new BigDecimal(520));
     }
 
 
@@ -33,4 +30,6 @@ public class StaticBean {
     public static void updateCache(String key, BigDecimal value) {
         localCache.put(key, value);
     }
+
+
 }

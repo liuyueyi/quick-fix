@@ -1,6 +1,7 @@
 package com.git.hui.fix.core.endpoint;
 
 import com.alibaba.fastjson.JSON;
+import com.git.hui.fix.api.constants.EndPoint;
 import com.git.hui.fix.api.modal.FixReqDTO;
 import com.git.hui.fix.api.spi.FixEndPoint;
 import com.git.hui.fix.core.FixEngine;
@@ -8,6 +9,7 @@ import com.git.hui.fix.core.FixEngine;
 /**
  * Created by @author yihui in 17:10 18/12/29.
  */
+@EndPoint(order = Integer.MAX_VALUE)
 public class ServletFixEndPoint implements FixEndPoint {
     private static volatile ServletFixEndPoint instance;
 

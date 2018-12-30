@@ -1,6 +1,8 @@
 package com.git.hui.fix.core.endpoint;
 
+import com.alibaba.fastjson.JSONObject;
 import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.core.reflect.ArgumentParser;
 
 
 import java.io.*;
@@ -54,7 +56,7 @@ public class HttpTask implements Runnable {
      * @return
      */
     private FixReqDTO parseRequest(HttpMessageParser.Request httpRequest) {
-        FixReqDTO request = new FixReqDTO();
+        FixReqDTO request = JSONObject.parseObject(httpRequest.getMessage(), FixReqDTO.class);
         System.out.println("req: " + httpRequest);
         return request;
     }

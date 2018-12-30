@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class BasicHttpServer {
     private static ExecutorService bootstrapExecutor = Executors.newSingleThreadExecutor();
     private static ExecutorService taskExecutor;
-    private static int PORT = 9999;
+    private static final String PORT_NAME = "fixerPort";
 
     static void startHttpServer() {
         int nThreads = Runtime.getRuntime().availableProcessors();
@@ -21,7 +21,7 @@ public class BasicHttpServer {
 
         while (true) {
             try {
-                ServerSocket serverSocket = new ServerSocket(PORT);
+                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(System.getProperty(PORT_NAME, "9999")));
                 bootstrapExecutor.submit(new ServerThread(serverSocket));
                 break;
             } catch (Exception e) {

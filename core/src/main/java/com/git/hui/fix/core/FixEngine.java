@@ -8,6 +8,7 @@ import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.api.spi.ServerLoaderBinder;
 import com.git.hui.fix.core.reflect.ArgumentParser;
 import com.git.hui.fix.core.reflect.ReflectUtil;
+import com.git.hui.fix.core.endpoint.EndPointLoader;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,17 +20,18 @@ import java.util.ServiceLoader;
  */
 public class FixEngine {
     private static class InnerClass {
-        private static final FixEngine instance = new FixEngine();
+        private static final FixEngine INSTANCE = new FixEngine();
     }
 
     public static FixEngine instance() {
-        return InnerClass.instance;
+        return InnerClass.INSTANCE;
     }
 
     private List<ServerLoader> serverLoaders;
 
     private FixEngine() {
         initAllServerLoads();
+        selectFixEndPoint();
     }
 
     private void initAllServerLoads() {
@@ -46,6 +48,12 @@ public class FixEngine {
         serverLoaders.sort(Comparator.comparingInt(ServerLoader::order));
     }
 
+    /**
+     * 选择服务侵入端点
+     */
+    private void selectFixEndPoint() {
+        EndPointLoader.autoLoadEndPoint();
+    }
 
     public Object execute(FixReqDTO req) {
         ImmutablePair<Object, Class> invokeObjPair = null;
