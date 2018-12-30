@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class BasicHttpServer {
     private static ExecutorService bootstrapExecutor = Executors.newSingleThreadExecutor();
     private static ExecutorService taskExecutor;
-    private static final String PORT_NAME = "fixerPort";
+    private static final String PORT_NAME = "quick.fix.port";
 
     static void startHttpServer() {
         int nThreads = Runtime.getRuntime().availableProcessors();
