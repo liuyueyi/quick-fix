@@ -38,7 +38,7 @@
 
 首先我们需要注入一个EndPoint，用于实现应用于外界的通信，这个是一切开始的基本条件，Fixer的Endpoint负责接收外部请求，并将请求转发给内部的解析器，执行应用内服务访问，并将结果输出给外部使用者
 
-![IMAGE](http://blog.hhui.top/hexblog/source/imgs/190102/00.jpg)
+![IMAGE](http://blog.hhui.top/hexblog/imgs/190102/00.jpg)
 
 上图给出了EndPoint的结构设计，因为目前的java应用，直接以jar方式跑的不太多了，更常见的是将服务跑在其他的容器中，比如我们常见的tomcat应用，Spring应用等；不同的容器，对外暴露的方式不一样，怎么样才可以做到在不同的容器中，进行优雅的支持呢？
 
