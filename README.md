@@ -148,7 +148,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 
 实例demo:
 
-[jar-example](examples/jar-example/README.md)
+[jar-example](examples/jar-example)
 
 #### b. 纯Spring应用
 
@@ -188,7 +188,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 实例demo:
 
 
-- [spring-example](examples/spring-example/README.md)
+- [spring-example](examples/spring-example)
 
 #### c. SpringMVC应用
 
@@ -210,7 +210,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 使用姿势&实例：
 
 - 使用和前面的类似
-- [spring-mvc-example](examples/spring-mvc-example/README.md)
+- [spring-mvc-example](examples/spring-mvc-example)
 
 
 #### d. SpringCloud应用
@@ -233,7 +233,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 
 使用姿势&实例:
 
-- [spring-cloud-example](examples/spring-cloud-example/README.md)
+- [spring-cloud-example](examples/spring-cloud-example)
 
 ## V. End
  
