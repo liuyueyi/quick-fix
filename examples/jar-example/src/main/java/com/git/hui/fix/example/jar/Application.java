@@ -21,7 +21,7 @@ public class Application {
         }).start();
 
         try {
-            Thread.sleep(2 * 2600);
+            Thread.sleep(2 * 3600 * 1000);
         } catch (Exception e) {
             Thread.currentThread().interrupt();
         }

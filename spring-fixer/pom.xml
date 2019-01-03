@@ -5,18 +5,17 @@
     <parent>
         <artifactId>quick-fix</artifactId>
         <groupId>com.git.hui.fix</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-fixer</artifactId>
+    <version>1.0</version>
 
     <properties>
-        <fix-core.version>1.0-SNAPSHOT</fix-core.version>
+        <fix-core.version>1.0</fix-core.version>
         <spring.version>5.0.5.RELEASE</spring.version>
     </properties>
-
-
     <dependencies>
         <dependency>
             <groupId>com.git.hui.fix</groupId>
@@ -43,6 +42,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 
 </project>

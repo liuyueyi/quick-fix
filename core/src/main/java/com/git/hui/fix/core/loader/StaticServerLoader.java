@@ -12,7 +12,7 @@ import com.git.hui.fix.core.util.StringUtils;
  *
  * Created by @author yihui in 15:16 18/12/29.
  */
-public class StaticServerLoader implements ServerLoader {
+public class StaticServerLoader extends ServerLoaderTemplate {
     private static final String STATIC_TYPE = "static";
 
     @Override
@@ -21,27 +21,12 @@ public class StaticServerLoader implements ServerLoader {
     }
 
     @Override
-    public ImmutablePair<Object, Class> getInvokeObject(FixReqDTO reqDTO) {
-        String service = reqDTO.getService();
-        Class clz;
-
+    public ImmutablePair<Object, Class> loadServicePair(String service) {
         try {
-            clz = this.getClass().getClassLoader().loadClass(service);
+            Class clz = this.getClass().getClassLoader().loadClass(service);
+            return ImmutablePair.of(null, clz);
         } catch (Exception e) {
             throw new ServerNotFoundException("parse " + service + " to bean error: " + e.getMessage());
         }
-
-        if (StringUtils.isEmpty(reqDTO.getField())) {
-            return ImmutablePair.of(null, clz);
-        }
-
-        Object invokeTarget;
-        try {
-            invokeTarget = ReflectUtil.getField(null, clz, reqDTO.getField());
-        } catch (Exception e) {
-            throw new ServerNotFoundException("get server#filed error!", e);
-        }
-
-        return ImmutablePair.of(invokeTarget, invokeTarget.getClass());
     }
 }

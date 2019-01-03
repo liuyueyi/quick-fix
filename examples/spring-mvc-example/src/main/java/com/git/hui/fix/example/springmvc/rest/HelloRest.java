@@ -1,4 +1,4 @@
-package com.git.hui.fix.example.spring.rest;
+package com.git.hui.fix.example.springmvc.rest;
 
 import com.alibaba.fastjson.JSON;
 import org.springframework.web.bind.annotation.GetMapping;

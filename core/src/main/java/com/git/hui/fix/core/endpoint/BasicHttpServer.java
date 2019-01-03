@@ -19,10 +19,13 @@ public class BasicHttpServer {
                 new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(100),
                         new ThreadPoolExecutor.DiscardPolicy());
 
+        int port = Integer.parseInt(System.getProperty(PORT_NAME, "9999"));
         while (true) {
             try {
-                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(System.getProperty(PORT_NAME, "9999")));
+
+                ServerSocket serverSocket = new ServerSocket(port);
                 bootstrapExecutor.submit(new ServerThread(serverSocket));
+                System.out.println("FixEndpoint is : " + port);
                 break;
             } catch (Exception e) {
                 try {

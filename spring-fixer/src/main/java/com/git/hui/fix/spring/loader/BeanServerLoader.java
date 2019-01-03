@@ -4,6 +4,7 @@ import com.git.hui.fix.api.exception.ServerNotFoundException;
 import com.git.hui.fix.api.loader.ServerLoader;
 import com.git.hui.fix.api.modal.FixReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
+import com.git.hui.fix.core.loader.ServerLoaderTemplate;
 import com.git.hui.fix.core.reflect.ReflectUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
@@ -11,7 +12,7 @@ import org.springframework.util.StringUtils;
 /**
  * Created by @author yihui in 17:21 18/12/29.
  */
-public class BeanServerLoader implements ServerLoader {
+public class BeanServerLoader extends ServerLoaderTemplate {
     private static final String BEAN_TYPE = "bean";
 
     private static ApplicationContext applicationContext;
@@ -25,17 +26,23 @@ public class BeanServerLoader implements ServerLoader {
         return StringUtils.isEmpty(reqDTO.getType()) || BEAN_TYPE.equalsIgnoreCase(reqDTO.getType().trim());
     }
 
+    private boolean beanName(String server) {
+        return !server.contains(".");
+    }
+
     @Override
-    public ImmutablePair<Object, Class> getInvokeObject(FixReqDTO reqDTO) {
-        String server = reqDTO.getService();
-        Object invokeBean;
-        if (!server.contains(".")) {
+    public ImmutablePair<Object, Class> loadServicePair(String server) {
+        Object invokeBean = null;
+        if (beanName(server)) {
             // 表示传入的是beanName，通过beanName来查找对应的bean
             invokeBean = applicationContext.getBean(server.trim());
         } else {
             // 表示传入的是完整的服务名，希望通过class来查找对应的bean
             try {
-                invokeBean = this.getClass().getClassLoader().loadClass(server.trim());
+                Class clz = this.getClass().getClassLoader().loadClass(server.trim());
+                if (clz != null) {
+                    invokeBean = applicationContext.getBean(clz);
+                }
             } catch (Exception e) {
                 throw new ServerNotFoundException("Failed to load Server: " + server);
             }
@@ -43,14 +50,6 @@ public class BeanServerLoader implements ServerLoader {
 
         if (invokeBean == null) {
             throw new ServerNotFoundException("Server not found: " + server);
-        }
-
-        if (!StringUtils.isEmpty(reqDTO.getField())) {
-            try {
-                invokeBean = ReflectUtil.getField(invokeBean, invokeBean.getClass(), reqDTO.getField());
-            } catch (Exception e) {
-                throw new ServerNotFoundException("Failed to load Server's Field: " + server + "#" + reqDTO.getField());
-            }
         }
 
         return ImmutablePair.of(invokeBean, invokeBean.getClass());

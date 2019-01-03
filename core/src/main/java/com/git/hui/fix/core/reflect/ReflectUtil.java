@@ -3,6 +3,7 @@ package com.git.hui.fix.core.reflect;
 import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.exception.ServerInvokedException;
 import com.git.hui.fix.api.exception.ServerNotFoundException;
+import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -19,10 +20,11 @@ public class ReflectUtil {
      * @param bean
      * @param clz
      * @param fieldName
-     * @return
+     * @return 返回field对象及其类型，因为field对象可以为null，所以这里直接获取反射的class类型返回；
      * @throws IllegalAccessException
      */
-    public static Object getField(Object bean, Class clz, String fieldName) throws IllegalAccessException {
+    public static ImmutablePair<Object, Class> getField(Object bean, Class clz, String fieldName)
+            throws IllegalAccessException {
         if (clz == Object.class) {
             throw new ServerNotFoundException(
                     "can't find field by fieldName: " + fieldName + " for clz:" + clz.getName());
@@ -31,7 +33,7 @@ public class ReflectUtil {
         for (Field field : clz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
                 field.setAccessible(true);
-                return field.get(bean);
+                return ImmutablePair.of(field.get(bean), field.getType());
             }
         }
 

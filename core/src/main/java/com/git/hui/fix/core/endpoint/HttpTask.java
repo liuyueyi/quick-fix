@@ -56,7 +56,6 @@ public class HttpTask implements Runnable {
      */
     private FixReqDTO parseRequest(HttpMessageParser.Request httpRequest) {
         FixReqDTO request = JSONObject.parseObject(httpRequest.getMessage(), FixReqDTO.class);
-        System.out.println("req: " + httpRequest);
         return request;
     }
 }

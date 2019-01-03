@@ -5,16 +5,30 @@
     <parent>
         <artifactId>quick-fix</artifactId>
         <groupId>com.git.hui.fix</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>examples</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>spring-example</module>
         <module>jar-example</module>
+        <module>spring-example</module>
+        <module>spring-cloud-example</module>
+        <module>spring-mvc-example</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

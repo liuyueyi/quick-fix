@@ -1,4 +1,4 @@
-package com.git.hui.fix.spring.endpoint;
+package com.git.hui.fix.springmvc.endpoint;
 
 import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.constants.EndPoint;
@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EndPoint(instance = false)
 public class WebFixEndPoint implements FixEndPoint {
+
     @Override
-    @PostMapping(path = "fixer/call")
+    @PostMapping(path = "inject-fixer-endpoint/call")
     public String call(@RequestBody FixReqDTO reqDTO) {
         Object ans = FixEngine.instance().execute(reqDTO);
         return JSON.toJSONString(ans);

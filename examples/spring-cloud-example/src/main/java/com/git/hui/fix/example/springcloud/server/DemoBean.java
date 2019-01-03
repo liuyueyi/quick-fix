@@ -1,4 +1,4 @@
-package com.git.hui.fix.example.spring.rest;
+package com.git.hui.fix.example.springcloud.server;
 
 import org.springframework.stereotype.Service;
 
