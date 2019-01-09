@@ -58,6 +58,8 @@ public class ArgumentParser {
                 return new BigInteger(type);
             } else if ("String".equals(type)) {
                 return value;
+            } else if ("Class".equalsIgnoreCase(type)) {
+                return ArgumentParser.class.getClassLoader().loadClass(type);
             } else {
                 Class clz = ArgumentParser.class.getClassLoader().loadClass(type);
                 return JSON.parseObject(value, clz);
