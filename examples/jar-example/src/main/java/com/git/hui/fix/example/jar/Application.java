@@ -1,7 +1,9 @@
 package com.git.hui.fix.example.jar;
 
 import com.git.hui.fix.core.FixEngine;
+import com.git.hui.fix.example.jar.holder.ServerHolder;
 import com.git.hui.fix.example.jar.server.CalculateServer;
+import com.git.hui.fix.example.jar.server.HelloServer;
 
 import java.math.BigDecimal;
 
@@ -16,6 +18,8 @@ public class Application {
             @Override
             public void run() {
                 FixEngine.instance();
+                HelloServer helloServer = new HelloServer("小灰灰blog");
+                ServerHolder.addServer("helloServer", helloServer);
                 CalculateServer.updateCache("init", new BigDecimal(12.3f));
             }
         }).start();

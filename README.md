@@ -92,6 +92,14 @@
 
 从设计到实现，下面博文分别进行详细介绍说明
 
+**技术文档**
+
+- [190102-Quick-Fix 从0到1构建一个应用内服务/数据访问订正工具包](https://liuyueyi.github.io/hexblog/2019/01/02/190102-Quick-Fix-%E4%BB%8E0%E5%88%B01%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8%E5%86%85%E6%9C%8D%E5%8A%A1-%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E8%AE%A2%E6%AD%A3%E5%B7%A5%E5%85%B7%E5%8C%85/)
+- [190108-Quick-Fix 如何优雅的实现应用内外交互之接口设计篇](https://liuyueyi.github.io/hexblog/2019/01/08/190108-Quick-Fix-%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%BA%94%E7%94%A8%E5%86%85%E5%A4%96%E4%BA%A4%E4%BA%92%E4%B9%8B%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E7%AF%87/)
+
+**使用文档**
+
+- [190104-Quick-Fix 纯Jar应用及扩展手册](https://liuyueyi.github.io/hexblog/2019/01/04/190104-Quick-Fix-%E7%BA%AFJar%E5%BA%94%E7%94%A8%E5%8F%8A%E6%89%A9%E5%B1%95%E6%89%8B%E5%86%8C/)
 
 ## IV. 使用说明
 
