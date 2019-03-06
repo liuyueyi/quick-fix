@@ -52,7 +52,9 @@ public class ArgumentParser {
                 return Byte.parseByte(value);
             } else if ("boolean".equals(type) || "Boolean".equals(type)) {
                 return Boolean.parseBoolean(value);
-            } else if ("BigDecimal".equals(type)) {
+            } else if ("short".equals(type) || "Short".equals(type)) {
+                return Short.parseShort(value);
+            }  else if ("BigDecimal".equals(type)) {
                 return new BigDecimal(value);
             } else if ("BigInteger".equals(type)) {
                 return new BigInteger(type);

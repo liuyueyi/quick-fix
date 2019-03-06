@@ -10,24 +10,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-fixer</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <properties>
-        <fix-core.version>1.0</fix-core.version>
+        <fix-core.version>1.1</fix-core.version>
         <spring.version>5.0.5.RELEASE</spring.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.git.hui.fix</groupId>
-            <artifactId>fix-api</artifactId>
-            <version>${fix-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.git.hui.fix</groupId>
             <artifactId>fix-core</artifactId>
             <version>${fix-core.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework</groupId>

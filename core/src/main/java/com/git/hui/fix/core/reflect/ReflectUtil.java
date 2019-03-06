@@ -46,28 +46,90 @@ public class ReflectUtil {
      *
      * @param clz
      * @param method
-     * @param argNum
+     * @param args
      * @return
      */
-    public static Method getMethod(Class clz, String method, int argNum) {
+    public static Method getMethod(Class clz, String method, Object[] args) {
         if (clz == Object.class) {
             throw new ServerNotFoundException(
-                    "can't find method by methodName: " + method + " argNum: " + argNum + " for clz:" + clz.getName());
+                    "can't find method by methodName: " + method + " args: " + JSON.toJSONString(args) + " for clz:" +
+                            clz.getName());
         }
 
 
         for (Method m : clz.getDeclaredMethods()) {
-            if (!m.getName().equals(method)) {
+            if (!m.getName().equals(method) || m.getParameterCount() != args.length) {
                 continue;
             }
 
-            if (m.getParameterCount() == argNum) {
+            if (judgeParamsType(m.getParameterTypes(), args)) {
                 m.setAccessible(true);
                 return m;
             }
         }
 
-        return getMethod(clz.getSuperclass(), method, argNum);
+        return getMethod(clz.getSuperclass(), method, args);
+    }
+
+    private static boolean judgeParamsType(Class[] paramTypes, Object[] args) {
+        for (int index = 0; index < args.length; index++) {
+            if (!judgeTypeMatch(paramTypes[index], args[index].getClass())) {
+                // 判断定义的参数类型，是否为传参类型，或者传参的父类or接口类型，不满足时，直接判False
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 判断类型是否兼容
+     *
+     * @param base
+     * @param target
+     * @return
+     */
+    private static boolean judgeTypeMatch(Class base, Class target) {
+        if (base.isAssignableFrom(target)) {
+            // 类型相同个，或者base为target的父类、接口类型
+            return true;
+        }
+
+        if (base == int.class) {
+            return target == Integer.class;
+        } else if (base == Integer.class) {
+            return target == int.class;
+        } else if (base == long.class) {
+            return target == Long.class;
+        } else if (base == Long.class) {
+            return target == long.class;
+        } else if (base == float.class) {
+            return target == Float.class;
+        } else if (base == Float.class) {
+            return target == float.class;
+        } else if (base == double.class) {
+            return target == Double.class;
+        } else if (base == Double.class) {
+            return target == double.class;
+        } else if (base == boolean.class) {
+            return target == Boolean.class;
+        } else if (base == Boolean.class) {
+            return target == boolean.class;
+        } else if (base == char.class) {
+            return target == Character.class;
+        } else if (base == Character.class) {
+            return target == char.class;
+        } else if (base == byte.class) {
+            return target == Byte.class;
+        } else if (base == Byte.class) {
+            return target == byte.class;
+        } else if (base == short.class) {
+            return target == Short.class;
+        } else if (base == Short.class) {
+            return target == short.class;
+        } else {
+            return false;
+        }
     }
 
     public static String execute(Object bean, Class clz, String method, Object[] args) {
@@ -76,7 +138,7 @@ public class ReflectUtil {
             return JSON.toJSONString(bean);
         }
 
-        Method chooseMethod = getMethod(clz, method, args.length);
+        Method chooseMethod = getMethod(clz, method, args);
 
         if (chooseMethod == null) {
             throw new ServerNotFoundException("can't find server's method: " + clz.getName() + "#" + method);

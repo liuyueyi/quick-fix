@@ -18,6 +18,10 @@
         <module>spring-mvc-example</module>
     </modules>
 
+    <properties>
+        <fix-core.version>1.1</fix-core.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
