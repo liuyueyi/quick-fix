@@ -90,7 +90,7 @@ public class ArgumentParser {
             } else if ("String".equals(type)) {
                 return value;
             } else if ("Class".equalsIgnoreCase(type)) {
-                return ArgumentParser.class.getClassLoader().loadClass(type);
+                return ArgumentParser.class.getClassLoader().loadClass(value);
             } else {
                 Class clz = ArgumentParser.class.getClassLoader().loadClass(type);
                 return JSON.parseObject(value, clz);
