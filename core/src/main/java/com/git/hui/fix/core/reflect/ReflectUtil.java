@@ -8,6 +8,7 @@ import com.git.hui.fix.core.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * Created by @author yihui in 14:45 18/12/13.

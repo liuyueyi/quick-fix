@@ -14,7 +14,7 @@
 
     <properties>
         <fix-core.version>1.1</fix-core.version>
-        <spring.version>5.0.5.RELEASE</spring.version>
+        <spring.version>5.0.8.RELEASE</spring.version>
     </properties>
     <dependencies>
         <dependency>

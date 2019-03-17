@@ -25,6 +25,12 @@ public abstract class ServerLoaderTemplate implements ServerLoader {
         return loadFieldPair(reqDTO, serverPair);
     }
 
+    /**
+     * 返回目标对象
+     *
+     * @param service
+     * @return
+     */
     public abstract ImmutablePair<Object, Class> loadServicePair(String service);
 
     public ImmutablePair<Object, Class> loadFieldPair(FixReqDTO reqDTO, ImmutablePair<Object, Class> serverPair) {

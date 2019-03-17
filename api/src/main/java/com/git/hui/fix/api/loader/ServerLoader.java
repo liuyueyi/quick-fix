@@ -24,8 +24,20 @@ public interface ServerLoader {
         }
     }
 
+    /**
+     * ServerLoader是否支持获取目标对象
+     *
+     * @param reqDTO
+     * @return
+     */
     boolean enable(FixReqDTO reqDTO);
 
+    /**
+     * 根据传入参数，获取目标对象和目标对象的class
+     *
+     * @param reqDTO
+     * @return
+     */
     ImmutablePair<Object, Class> getInvokeObject(FixReqDTO reqDTO);
 
 }
