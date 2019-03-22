@@ -1,14 +1,14 @@
 package com.git.hui.fix.core.reflect;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.ParameterizedTypeImpl;
 import com.git.hui.fix.api.exception.IllegalInvokeArgumentException;
+import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 
 /**
  * 根据传入的参数来解析为对应的do对象
@@ -18,7 +18,8 @@ public class ArgumentParser {
     /**
      * default empty arguments
      */
-    private static final Object[] EMPTY_ARGS = new Object[]{};
+    private static final Object[] EMPTY_ARGS = new Object[0];
+    private static final Type[] EMPTY_TYPE = new Type[0];
 
     public static Object[] parse(String[] args) {
         if (args == null || args.length == 0) {
@@ -56,12 +57,6 @@ public class ArgumentParser {
         } else if (typeValue.length == 2) {
             // 标准的kv参数, 前面为参数类型，后面为参数值
             return parseStrToObj(typeValue[0], typeValue[1]);
-        } else if (typeValue.length >= 3) {
-            // 对于包含泛型的参数类型
-            // java.util.List#java.lang.String#["ads","bcd"]
-            String[] reflectTypes = new String[typeValue.length - 2];
-            System.arraycopy(typeValue, 1, reflectTypes, 0, typeValue.length - 2);
-            return parseStr2GenericObj(typeValue[typeValue.length - 1], typeValue[0], reflectTypes);
         } else {
             throw new IllegalInvokeArgumentException("Illegal invoke arg: " + arg);
         }
@@ -92,8 +87,8 @@ public class ArgumentParser {
             } else if ("Class".equalsIgnoreCase(type)) {
                 return ArgumentParser.class.getClassLoader().loadClass(value);
             } else {
-                Class clz = ArgumentParser.class.getClassLoader().loadClass(type);
-                return JSON.parseObject(value, clz);
+                Type paramType = genParameterType(type);
+                return JSON.parseObject(value, paramType);
             }
         } catch (Exception e) {
             throw new IllegalInvokeArgumentException(
@@ -101,40 +96,111 @@ public class ArgumentParser {
         }
     }
 
-    /**
-     * 将value转换为包含泛型的参数类型
-     *
-     * @param value   对象json串
-     * @param clzType 对象类型
-     * @param tTypes  泛型参数类型
-     * @return
-     */
-    private static Object parseStr2GenericObj(String value, String clzType, String... tTypes) {
-        try {
-            Type[] paramsType = new Type[tTypes.length];
-            int count = 0;
-            for (String t : tTypes) {
-                paramsType[count++] = getType(t);
-            }
-
-            // 这里借助fastjson指定精确的Type来实现反序列化
-            Type type = new ParameterizedTypeImpl(paramsType, null, getType(clzType));
-            return JSONObject.parseObject(value, type);
-        } catch (Exception e) {
-            throw new IllegalInvokeArgumentException(
-                    "Pare Argument to Object Error! type: " + clzType + " # " + Arrays.asList(tTypes) + " value: " +
-                            value, e);
+    private static Type genParameterType(String express) throws ClassNotFoundException {
+        int start = express.indexOf("<");
+        if (start < 0) {
+            // 非泛型对象，普通的POJO
+            return Class.forName(express);
         }
+        int end = express.lastIndexOf(">");
+        return genParameterType(express.substring(0, start), express.substring(start + 1, end));
     }
 
     /**
-     * 获取参数类型
+     * java.util.List | java.util.Map<java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>>
+     * java.util.Map | java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>
+     * java.util.List | java.util.Map<java.lang.String, java.lang.Integer>
+     * java.util.Map | java.lang.String, java.lang.Integer
+     *
+     * @param rawType
+     * @param actualType
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private static ParameterizedType genParameterType(String rawType, String actualType) throws ClassNotFoundException {
+        if (!actualType.contains("<")) {
+            // 普通的对象，直接解析即可
+            Type[] actualTypeArguments = parse2simpleType(actualType);
+            return new ParameterizedTypeImpl(actualTypeArguments, null, Class.forName(rawType));
+        }
+
+        // 泛型起始坐标
+        int genericStart = actualType.indexOf("<");
+        // 泛型结束坐标
+        int genericEnd = actualType.lastIndexOf(">");
+        String subActualType = actualType.substring(genericStart + 1, genericEnd);
+
+        // 解决嵌套的泛型类型获取
+        int subRawTypeStart = getRawTypeIndex(actualType, genericStart);
+        Type subGenType = genParameterType(actualType.substring(subRawTypeStart, genericStart), subActualType);
+        Type[] beforeArg = parse2simpleType(actualType, 0, subRawTypeStart);
+        Type[] endArg = parse2simpleType(actualType, genericEnd + 1, actualType.length());
+        return new ParameterizedTypeImpl(mergeType(beforeArg, subGenType, endArg), null, Class.forName(rawType.trim()));
+    }
+
+    /**
+     * 解析泛型前面的包装类起始坐标
+     *
+     * 如： java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>
+     * 返回的就是 java.util.List 这个字符串在整个type的起始位置
+     *
+     * @param type              字符串
+     * @param genericStartIndex 泛型的坐标，如上例中 '<' 的位置
+     * @return
+     */
+    private static int getRawTypeIndex(String type, int genericStartIndex) {
+        char tmp;
+        int rawTypeIndex = genericStartIndex - 1;
+        while (--rawTypeIndex > 0) {
+            tmp = type.charAt(rawTypeIndex);
+            if (tmp == '<' || tmp == ',' || tmp == ' ') {
+                break;
+            }
+        }
+
+        return rawTypeIndex;
+    }
+
+    /**
+     * java.util.Map<java.lang.String, java.lang.Integer>
      *
      * @param type
      * @return
-     * @throws ClassNotFoundException
      */
-    private static Type getType(String type) throws ClassNotFoundException {
-        return ArgumentParser.class.getClassLoader().loadClass(type);
+    private static Type[] parse2simpleType(String type, int start, int end) throws ClassNotFoundException {
+        if (start >= end || end > type.length()) {
+            return EMPTY_TYPE;
+        }
+
+        return parse2simpleType(type.substring(start, end));
+    }
+
+    private static Type[] parse2simpleType(String type) throws ClassNotFoundException {
+        if (StringUtils.isBlank(type)) {
+            return EMPTY_TYPE;
+        }
+
+        String[] arguments = StringUtils.split(type, ",");
+        Type[] result = new Type[arguments.length];
+        int index = 0;
+        for (String s : arguments) {
+            result[index++] = Class.forName(s.trim());
+        }
+
+        return result;
+    }
+
+    private static Type[] mergeType(Type[] before, Type sub, Type[] end) {
+        Type[] result = new Type[before.length + end.length + 1];
+
+        int offset = before.length;
+        if (offset > 0) {
+            System.arraycopy(before, 0, result, 0, offset);
+        }
+        result[offset] = sub;
+        if (end.length > 0) {
+            System.arraycopy(end, 0, result, offset + 1, end.length);
+        }
+        return result;
     }
 }
