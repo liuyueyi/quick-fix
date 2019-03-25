@@ -2,7 +2,6 @@ package git.hui.fix.test;
 
 
 import com.git.hui.fix.core.reflect.ReflectUtil;
-import com.sun.tools.javac.file.RelativePath;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
