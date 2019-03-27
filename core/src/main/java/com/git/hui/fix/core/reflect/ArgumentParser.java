@@ -72,8 +72,10 @@ public class ArgumentParser {
                 return Float.parseFloat(value);
             } else if ("double".equals(type) || "Double".equals(type)) {
                 return Double.parseDouble(value);
-            } else if ("byte".equals(type) || "Character".equals(type)) {
+            } else if ("byte".equals(type) || "Byte".equals(type)) {
                 return Byte.parseByte(value);
+            } else if ("char".equals(type) || "Character".equals(type)) {
+                return type.charAt(0);
             } else if ("boolean".equals(type) || "Boolean".equals(type)) {
                 return Boolean.parseBoolean(value);
             } else if ("short".equals(type) || "Short".equals(type)) {
