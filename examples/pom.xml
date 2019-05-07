@@ -34,5 +34,12 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>yihui-maven-repo</id>
+            <url>https://raw.githubusercontent.com/liuyueyi/maven-repository/master/repository</url>
+        </repository>
+    </repositories>
+
 
 </project>

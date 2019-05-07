@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.git.hui.fix</groupId>
             <artifactId>spring-mvc-fixer</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
@@ -78,6 +78,9 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>yihui-maven-repo</id>
+            <url>https://raw.githubusercontent.com/liuyueyi/maven-repository/master/repository</url>
+        </repository>
     </repositories>
-
 </project>
