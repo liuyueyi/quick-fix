@@ -5,6 +5,7 @@ import com.git.hui.fix.api.constants.EndPoint;
 import com.git.hui.fix.api.modal.FixReqDTO;
 import com.git.hui.fix.api.spi.FixEndPoint;
 import com.git.hui.fix.core.FixEngine;
+import com.google.gson.Gson;
 
 /**
  * Created by @author yihui in 17:10 18/12/29.
@@ -34,9 +35,12 @@ public class ServletFixEndPoint implements FixEndPoint {
         return instance;
     }
 
+    private Gson gson = new Gson();
+
     @Override
     public String call(FixReqDTO reqDTO) {
-        return JSON.toJSONString(FixEngine.instance().execute(reqDTO));
+        //  fixme 这里改成gson进行序列化，使用fastjson序列化时，如果key为int，不会包含在双引号中
+        return gson.toJson(FixEngine.instance().execute(reqDTO));
     }
 
     public static void main(String[] args) throws InterruptedException {

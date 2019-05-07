@@ -64,29 +64,29 @@ public class ArgumentParser {
 
     private static Object parseStrToObj(String type, String value) {
         try {
-            if ("int".equals(type) || "Integer".equals(type)) {
+            if ("int".equals(type) || "Integer".equals(type) || Integer.class.getName().equals(type)) {
                 return Integer.parseInt(value);
-            } else if ("long".equals(type) || "Long".equals(type)) {
+            } else if ("long".equals(type) || "Long".equals(type) || Long.class.getName().equals(type)) {
                 return Long.parseLong(value);
-            } else if ("float".equals(type) || "Float".equals(type)) {
+            } else if ("float".equals(type) || "Float".equals(type) || Float.class.getName().equals(type)) {
                 return Float.parseFloat(value);
-            } else if ("double".equals(type) || "Double".equals(type)) {
+            } else if ("double".equals(type) || "Double".equals(type) || Double.class.getName().equals(type)) {
                 return Double.parseDouble(value);
-            } else if ("byte".equals(type) || "Byte".equals(type)) {
+            } else if ("byte".equals(type) || "Byte".equals(type) || Byte.class.getName().equals(type)) {
                 return Byte.parseByte(value);
-            } else if ("char".equals(type) || "Character".equals(type)) {
+            } else if ("char".equals(type) || "Character".equals(type) || Character.class.getName().equals(type)) {
                 return type.charAt(0);
-            } else if ("boolean".equals(type) || "Boolean".equals(type)) {
+            } else if ("boolean".equals(type) || "Boolean".equals(type) || Boolean.class.getName().equals(type)) {
                 return Boolean.parseBoolean(value);
-            } else if ("short".equals(type) || "Short".equals(type)) {
+            } else if ("short".equals(type) || "Short".equals(type) || Short.class.getName().equals(type)) {
                 return Short.parseShort(value);
-            } else if ("BigDecimal".equals(type)) {
+            } else if ("BigDecimal".equals(type) || BigDecimal.class.getName().equals(type)) {
                 return new BigDecimal(value);
-            } else if ("BigInteger".equals(type)) {
+            } else if ("BigInteger".equals(type) || BigInteger.class.getName().equals(type)) {
                 return new BigInteger(type);
-            } else if ("String".equals(type)) {
+            } else if ("String".equals(type) || String.class.getName().equals(type)) {
                 return value;
-            } else if ("Class".equalsIgnoreCase(type)) {
+            } else if ("Class".equalsIgnoreCase(type) || Class.class.getName().equals(type)) {
                 return ArgumentParser.class.getClassLoader().loadClass(value);
             } else {
                 Type paramType = genParameterType(type);

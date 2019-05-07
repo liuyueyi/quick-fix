@@ -140,7 +140,7 @@
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>fix-core</artifactId>
-    <version>1.1</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
@@ -169,7 +169,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-fixer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
@@ -209,7 +209,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-mvc-fixer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
@@ -232,7 +232,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-cloud-fixer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
