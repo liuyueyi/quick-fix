@@ -72,8 +72,7 @@ public class FixEngine {
     }
 
     private Object doExecute(Object invokeObject, Class invokeClass, FixReqDTO req) {
-        Object[] arguments = ArgumentParser.parse(req.getParams());
-        return ReflectUtil.execute(invokeObject, invokeClass, req.getMethod(), arguments);
+        return ReflectUtil.execute(invokeObject, invokeClass, req);
     }
 
 }

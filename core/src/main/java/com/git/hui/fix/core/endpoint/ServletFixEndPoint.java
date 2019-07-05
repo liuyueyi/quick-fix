@@ -1,6 +1,5 @@
 package com.git.hui.fix.core.endpoint;
 
-import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.constants.EndPoint;
 import com.git.hui.fix.api.modal.FixReqDTO;
 import com.git.hui.fix.api.spi.FixEndPoint;

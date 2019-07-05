@@ -3,8 +3,10 @@ package com.git.hui.fix.core.reflect;
 import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.exception.ServerInvokedException;
 import com.git.hui.fix.api.exception.ServerNotFoundException;
+import com.git.hui.fix.api.modal.FixReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.util.StringUtils;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -133,10 +135,10 @@ public class ReflectUtil {
         }
     }
 
-    public static String execute(Object bean, Class clz, String method, Object[] args) {
+    private static Object execute(Object bean, Class clz, String method, Object[] args) {
         if (StringUtils.isEmpty(method)) {
             // 获取类的成员属性值时，不传method，直接返回属性值
-            return JSON.toJSONString(bean);
+            return bean;
         }
 
         Method chooseMethod = getMethod(clz, method, args);
@@ -147,8 +149,7 @@ public class ReflectUtil {
 
         try {
             chooseMethod.setAccessible(true);
-            Object result = chooseMethod.invoke(bean, args);
-            return JSON.toJSONString(result);
+            return chooseMethod.invoke(bean, args);
         } catch (Exception e) {
             throw new ServerInvokedException(
                     "unexpected server invoked " + clz.getName() + "#" + method + " args: " + JSON.toJSONString(args),
@@ -156,4 +157,27 @@ public class ReflectUtil {
         }
     }
 
+    public static Object execute(Object target, Class clz, FixReqDTO req) {
+        Object[] args = ArgumentParser.parse(req.getParams());
+        target = execute(target, clz, req.getMethod(), args);
+
+        if (target == null) {
+            return null;
+        }
+
+        // 如果存在二级调用时，继续走下面的逻辑
+        try {
+            if (!StringUtils.isBlank(req.getSecondField())) {
+                target = ReflectUtil.getField(target, target.getClass(), req.getSecondField()).getLeft();
+            }
+        } catch (Exception e) {
+            throw new ServerNotFoundException("get " + target.getClass() + "#" + req.getSecondField() + " error!", e);
+        }
+
+        if (!StringUtils.isBlank(req.getSecondMethod())) {
+            args = ArgumentParser.parse(req.getSecondParams());
+            target = execute(target, target.getClass(), req.getSecondMethod(), args);
+        }
+        return target;
+    }
 }

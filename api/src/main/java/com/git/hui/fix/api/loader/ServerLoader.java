@@ -38,6 +38,6 @@ public interface ServerLoader {
      * @param reqDTO
      * @return
      */
-    ImmutablePair<Object, Class> getInvokeObject(FixReqDTO reqDTO);
+    ImmutablePair</** 目标对象 */Object, /*** 目标对象类型 */Class> getInvokeObject(FixReqDTO reqDTO);
 
 }

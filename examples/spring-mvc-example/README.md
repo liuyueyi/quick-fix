@@ -18,7 +18,7 @@
     <dependency>
         <groupId>com.git.hui.fix</groupId>
         <artifactId>spring-mvc-fixer</artifactId>
-        <version>1.0</version>
+        <version>1.3</version>
     </dependency>
 </dependencies>
 ```
@@ -37,7 +37,7 @@
     <dependency>
         <groupId>com.git.hui.fix</groupId>
         <artifactId>spring-mvc-fixer</artifactId>
-        <version>1.0</version>
+        <version>1.3</version>
     </dependency>
 </dependencies>
 ```
@@ -59,6 +59,9 @@
 | - | method | 方法名，需要执行的方法；为空时，表示访问某个服务的成员属性值 |
 | - | type | static 表示访问静态类；其他表示访问Spring Bean | 
 | - | params | 请求参数，数组，可以不存在，格式为 `类型#值`，对于基本类型，可以省略类型的前缀包 |   
+| - | secondMethod | 链式请求方法名 |   
+| - | secondField | 链式请求属性 |   
+| - | secondParams | 链式请求参数，数组，可以不存在，格式为 `类型#值`，对于基本类型，可以省略类型的前缀包 |   
 
 
 ### 1. bean实例调用方式
@@ -99,4 +102,120 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 ```bash
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "invalidateAll","field":"localCache", "type":"static"}'
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
+```
+
+### 3. 单例调用方式
+
+单例的正常使用，会涉及到两个方法传入，在1.3+版本之后支持，通过制定 `secondMethod`, `secondParams`来实现
+
+一个简单的测试case
+
+```java
+package com.git.hui.fix.example.springmvc.rest;
+
+/**
+ * Created by @author yihui in 19:45 19/7/5.
+ */
+public class SingletonBean {
+
+    private static class InnerClz {
+        private static final SingletonBean INSTANCE = new SingletonBean();
+    }
+
+    public static SingletonBean getInstance() {
+        return InnerClz.INSTANCE;
+    }
+
+    public String sayHello(String hello) {
+        return hello;
+    }
+}
+```
+
+如果我们需要执行上面的 `sayHello`方法，可以如下
+
+```bash
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
+```
+
+### 4. 调用类的方法的方法
+
+当一次调用某个服务的方法返回的是一个非POJO对象时，我可能需要再次调用这个对象的方法/或者访问它的属性（这种case和上面的单例差不多)，此时在1.3+版本中，支持二次链式调用
+
+针对静态类
+
+```java
+package com.git.hui.fix.example.springmvc.rest;
+
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
+import java.math.BigDecimal;
+
+/**
+ * Created by @author yihui in 18:36 18/12/29.
+ */
+public class StaticBean {
+
+    private static LoadingCache<String, BigDecimal> localCache;
+
+    static {
+        localCache = CacheBuilder.newBuilder().build(new CacheLoader<String, BigDecimal>() {
+            @Override
+            public BigDecimal load(String key) throws Exception {
+                return BigDecimal.ZERO;
+            }
+        });
+
+        localCache.put("init", new BigDecimal(520));
+    }
+
+
+    public static BigDecimal getCache(String key) {
+        return localCache.getUnchecked(key);
+    }
+
+    public static void updateCache(String key, BigDecimal value) {
+        localCache.put(key, value);
+    }
+
+
+    public static LoadingCache<String, BigDecimal> getLocalCache() {
+        return localCache;
+    }
+
+
+    public static class InnerBean {
+        private String name;
+
+        public InnerBean() {
+            name = "name_" + Thread.currentThread().getId();
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private static InnerBean innerBean = new InnerBean();
+
+    public static InnerBean getInnerBean() {
+        return innerBean;
+    }
+}
+```
+
+如果我希望通过调用 `StaticBean.getLocalCache`来获取内部对象，然后再调用内部对象的方法或属性时，可以如下操作
+
+```bash
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getLocalCache", "secondMethod": "get", "secondParams": ["init"], "type":"static"}'
+```
+
+针对`innerBean`的访问，可以如下
+
+```bash
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondMethod": "getName", "secondParams": [], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondField": "name", "secondParams": [], "type":"static"}'
 ```

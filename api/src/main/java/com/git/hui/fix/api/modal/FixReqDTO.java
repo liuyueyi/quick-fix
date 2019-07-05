@@ -46,4 +46,13 @@ public class FixReqDTO implements Serializable {
      * - net.finbtc.component.model.TradePairDO#{"pairId": 120}
      */
     private String[] params;
+
+    /**
+     * 针对单例的访问/针对静态类的方法返回对象再次访问的case
+     */
+    private String secondMethod;
+
+    private String secondField;
+
+    private String[] secondParams;
 }

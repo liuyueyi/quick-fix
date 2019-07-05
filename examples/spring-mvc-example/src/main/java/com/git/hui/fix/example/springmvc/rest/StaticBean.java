@@ -33,4 +33,28 @@ public class StaticBean {
     public static void updateCache(String key, BigDecimal value) {
         localCache.put(key, value);
     }
+
+
+    public static LoadingCache<String, BigDecimal> getLocalCache() {
+        return localCache;
+    }
+
+
+    public static class InnerBean {
+        private String name;
+
+        public InnerBean() {
+            name = "name_" + Thread.currentThread().getId();
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private static InnerBean innerBean = new InnerBean();
+
+    public static InnerBean getInnerBean() {
+        return innerBean;
+    }
 }

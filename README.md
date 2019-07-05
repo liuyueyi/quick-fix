@@ -140,7 +140,7 @@
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>fix-core</artifactId>
-    <version>1.2.1</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -169,7 +169,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-fixer</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -194,6 +194,9 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 
 # 测试静态类的静态成员的方法调用
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.spring.server.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
+
+# 单例类的使用姿势
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
 ```
 
 实例demo:
@@ -209,7 +212,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-mvc-fixer</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -232,7 +235,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-cloud-fixer</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -247,6 +250,26 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 - [spring-cloud-example](examples/spring-cloud-example)
 
 ## V. End
+
+### 版本说明
+
+**v1.1**
+
+- 完成quick-fix 基础功能，实现应用内服务\数据访问
+- 集成基于socket的http服务器，作为默认的应用内外交互通道
+- 支持Spring Jar 应用直接使用
+- 支持Spring MVC 应用直接使用
+- 支持Spring Cloud 应用直接使用
+
+**v1.2**
+
+- 支持ServerLoader优先级指定
+- 使用gson替换fastjson, 解决序列化对应的的key没有双引号导致json格式非法的问题
+
+**v1.3**
+
+- 新增单例反射调用支持；支持二级链式方法调用
+
  
 ### 其他
 
