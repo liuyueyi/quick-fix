@@ -270,6 +270,14 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 
 - 新增单例反射调用支持；支持二级链式方法调用
 
+**v1.4**
+
+- [issues #4](https://github.com/liuyueyi/quick-fix/issues/4) 支持参数解析的扩展
+    - 默认提供八种基本数据类型，BigInteger, BigDecimal, Class, Enum, Json格式POJO对象的参数转换
+    - 通过JDK SPI方式，加载自定义的继承自`com.git.hui.fix.core.parser.IArgParser`的参数解析器 
+- [issues #5](https://github.com/liuyueyi/quick-fix/issues/5) 解决传参为null的场景支持
+- 项目[spring-mvc-example](examples/spring-mvc-example) 新增枚举类传参的示例demo
+
  
 ### 其他
 

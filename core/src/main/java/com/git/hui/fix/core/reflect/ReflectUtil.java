@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 /**
  * Created by @author yihui in 14:45 18/12/13.
@@ -52,7 +53,7 @@ public class ReflectUtil {
      * @param args
      * @return
      */
-    public static Method getMethod(Class clz, String method, Object[] args) {
+    public static Method getMethod(Class clz, String method, ImmutablePair<Type, Object>[] args) {
         if (clz == Object.class) {
             throw new ServerNotFoundException(
                     "can't find method by methodName: " + method + " args: " + JSON.toJSONString(args) + " for clz:" +
@@ -74,9 +75,10 @@ public class ReflectUtil {
         return getMethod(clz.getSuperclass(), method, args);
     }
 
-    private static boolean judgeParamsType(Class[] paramTypes, Object[] args) {
+    private static boolean judgeParamsType(Class[] paramTypes, ImmutablePair<Type, Object>[] args) {
         for (int index = 0; index < args.length; index++) {
-            if (!judgeTypeMatch(paramTypes[index], args[index].getClass())) {
+            if (!judgeTypeMatch(paramTypes[index], args[index].getRight() != null ? args[index].getRight().getClass() :
+                    (Class) args[index].getLeft())) {
                 // 判断定义的参数类型，是否为传参类型，或者传参的父类or接口类型，不满足时，直接判False
                 return false;
             }
@@ -94,7 +96,7 @@ public class ReflectUtil {
      */
     private static boolean judgeTypeMatch(Class base, Class target) {
         if (base.isAssignableFrom(target)) {
-            // 类型相同个，或者base为target的父类、接口类型
+            // 类型相同，或者base为target的父类、接口类型
             return true;
         }
 
@@ -135,7 +137,7 @@ public class ReflectUtil {
         }
     }
 
-    private static Object execute(Object bean, Class clz, String method, Object[] args) {
+    private static Object execute(Object bean, Class clz, String method, ImmutablePair<Type, Object>[] args) {
         if (StringUtils.isEmpty(method)) {
             // 获取类的成员属性值时，不传method，直接返回属性值
             return bean;
@@ -149,7 +151,11 @@ public class ReflectUtil {
 
         try {
             chooseMethod.setAccessible(true);
-            return chooseMethod.invoke(bean, args);
+            Object[] params = new Object[args.length];
+            for (int index = 0, size = args.length; index < size; index++) {
+                params[index] = args[index].getRight();
+            }
+            return chooseMethod.invoke(bean, params);
         } catch (Exception e) {
             throw new ServerInvokedException(
                     "unexpected server invoked " + clz.getName() + "#" + method + " args: " + JSON.toJSONString(args),
@@ -158,7 +164,7 @@ public class ReflectUtil {
     }
 
     public static Object execute(Object target, Class clz, FixReqDTO req) {
-        Object[] args = ArgumentParser.parse(req.getParams());
+        ImmutablePair<Type, Object>[] args = ArgumentParser.parse(req.getParams());
         target = execute(target, clz, req.getMethod(), args);
 
         if (target == null) {

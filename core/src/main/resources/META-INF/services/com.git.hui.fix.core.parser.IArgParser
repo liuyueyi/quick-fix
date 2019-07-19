@@ -1,0 +1,14 @@
+com.git.hui.fix.core.parser.BigIntegerParser
+com.git.hui.fix.core.parser.BitDecimalParser
+com.git.hui.fix.core.parser.BooleanParser
+com.git.hui.fix.core.parser.ByteParser
+com.git.hui.fix.core.parser.CharParser
+com.git.hui.fix.core.parser.ClassParser
+com.git.hui.fix.core.parser.DoubleParser
+com.git.hui.fix.core.parser.EnumParser
+com.git.hui.fix.core.parser.FloatParser
+com.git.hui.fix.core.parser.IntegerParser
+com.git.hui.fix.core.parser.JsonObjectParser
+com.git.hui.fix.core.parser.LongParser
+com.git.hui.fix.core.parser.ShortParser
+com.git.hui.fix.core.parser.StringParser

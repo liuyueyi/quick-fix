@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.git.hui.fix</groupId>
             <artifactId>spring-fixer</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency>
 
         <dependency>

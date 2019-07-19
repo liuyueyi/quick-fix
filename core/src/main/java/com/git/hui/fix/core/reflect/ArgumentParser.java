@@ -1,32 +1,37 @@
 package com.git.hui.fix.core.reflect;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.util.ParameterizedTypeImpl;
 import com.git.hui.fix.api.exception.IllegalInvokeArgumentException;
+import com.git.hui.fix.api.modal.ImmutablePair;
+import com.git.hui.fix.core.parser.IArgParser;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * 根据传入的参数来解析为对应的do对象
  * Created by @author yihui in 15:32 18/12/13.
  */
 public class ArgumentParser {
+    public static final String SPLIT_SYMBOL = "#";
+
     /**
      * default empty arguments
      */
-    private static final Object[] EMPTY_ARGS = new Object[0];
-    private static final Type[] EMPTY_TYPE = new Type[0];
+    private static final ImmutablePair[] EMPTY_ARGS = new ImmutablePair[0];
 
-    public static Object[] parse(String[] args) {
+    private static List<IArgParser> parseList;
+
+    @SuppressWarnings("unchecked")
+    public static ImmutablePair<Type, Object>[] parse(String[] args) {
         if (args == null || args.length == 0) {
             return EMPTY_ARGS;
         }
 
-        Object[] result = new Object[args.length];
+        ImmutablePair[] result = new ImmutablePair[args.length];
         for (int i = 0; i < args.length; i++) {
             result[i] = buildArgObj(args[i]);
         }
@@ -45,164 +50,52 @@ public class ArgumentParser {
      *
      *            "Hello World"  返回 "Hello Word"
      *            "int#10" 返回 10
+     *            "enum#com.git.hui.fix.example.springmvc.rest.EnumBean.DemoType#GET" 枚举，相当于传参 DemoType.GET
      *            "com.git.hui.fix.core.binder.DefaultServerBinder#{}" 返回的是对象 defaultServerBinder
-     *            "java.util.List#java.lang.String#["ads","bcd"]  返回的是List集合, 相当于  Arrays.asList("asd", "bcd")
+     *            "java.util.List<java.lang.String, java.lang.String>>#["ads","bcd"]  返回的是List集合, 相当于  Arrays.asList("asd", "bcd")
      * @return
      */
-    private static Object buildArgObj(String arg) {
-        String[] typeValue = arg.split("#");
+    private static ImmutablePair<Type, Object> buildArgObj(String arg) {
+        String[] typeValue = StringUtils.split(arg, SPLIT_SYMBOL);
         if (typeValue.length == 1) {
             // 没有 #，把参数当成String
-            return arg;
+            return parseStrToObj("", arg);
         } else if (typeValue.length == 2) {
             // 标准的kv参数, 前面为参数类型，后面为参数值
             return parseStrToObj(typeValue[0], typeValue[1]);
         } else {
-            throw new IllegalInvokeArgumentException("Illegal invoke arg: " + arg);
+            return parseStrToObj(typeValue[0], arg.substring(typeValue[0].length() + 1));
         }
     }
 
-    private static Object parseStrToObj(String type, String value) {
-        try {
-            if ("int".equals(type) || "Integer".equals(type) || Integer.class.getName().equals(type)) {
-                return Integer.parseInt(value);
-            } else if ("long".equals(type) || "Long".equals(type) || Long.class.getName().equals(type)) {
-                return Long.parseLong(value);
-            } else if ("float".equals(type) || "Float".equals(type) || Float.class.getName().equals(type)) {
-                return Float.parseFloat(value);
-            } else if ("double".equals(type) || "Double".equals(type) || Double.class.getName().equals(type)) {
-                return Double.parseDouble(value);
-            } else if ("byte".equals(type) || "Byte".equals(type) || Byte.class.getName().equals(type)) {
-                return Byte.parseByte(value);
-            } else if ("char".equals(type) || "Character".equals(type) || Character.class.getName().equals(type)) {
-                return type.charAt(0);
-            } else if ("boolean".equals(type) || "Boolean".equals(type) || Boolean.class.getName().equals(type)) {
-                return Boolean.parseBoolean(value);
-            } else if ("short".equals(type) || "Short".equals(type) || Short.class.getName().equals(type)) {
-                return Short.parseShort(value);
-            } else if ("BigDecimal".equals(type) || BigDecimal.class.getName().equals(type)) {
-                return new BigDecimal(value);
-            } else if ("BigInteger".equals(type) || BigInteger.class.getName().equals(type)) {
-                return new BigInteger(type);
-            } else if ("String".equals(type) || String.class.getName().equals(type)) {
-                return value;
-            } else if ("Class".equalsIgnoreCase(type) || Class.class.getName().equals(type)) {
-                return ArgumentParser.class.getClassLoader().loadClass(value);
-            } else {
-                Type paramType = genParameterType(type);
-                return JSON.parseObject(value, paramType);
-            }
-        } catch (Exception e) {
-            throw new IllegalInvokeArgumentException(
-                    "Pare Argument to Object Error! type: " + type + " value: " + value, e);
-        }
-    }
+    private static ImmutablePair<Type, Object> parseStrToObj(String type, String value) {
+        loadParser();
 
-    private static Type genParameterType(String express) throws ClassNotFoundException {
-        int start = express.indexOf("<");
-        if (start < 0) {
-            // 非泛型对象，普通的POJO
-            return Class.forName(express);
-        }
-        int end = express.lastIndexOf(">");
-        return genParameterType(express.substring(0, start), express.substring(start + 1, end));
-    }
-
-    /**
-     * java.util.List | java.util.Map<java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>>
-     * java.util.Map | java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>
-     * java.util.List | java.util.Map<java.lang.String, java.lang.Integer>
-     * java.util.Map | java.lang.String, java.lang.Integer
-     *
-     * @param rawType
-     * @param actualType
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    private static ParameterizedType genParameterType(String rawType, String actualType) throws ClassNotFoundException {
-        if (!actualType.contains("<")) {
-            // 普通的对象，直接解析即可
-            Type[] actualTypeArguments = parse2simpleType(actualType);
-            return new ParameterizedTypeImpl(actualTypeArguments, null, Class.forName(rawType));
-        }
-
-        // 泛型起始坐标
-        int genericStart = actualType.indexOf("<");
-        // 泛型结束坐标
-        int genericEnd = actualType.lastIndexOf(">");
-        String subActualType = actualType.substring(genericStart + 1, genericEnd);
-
-        // 解决嵌套的泛型类型获取
-        int subRawTypeStart = getRawTypeIndex(actualType, genericStart);
-        Type subGenType = genParameterType(actualType.substring(subRawTypeStart, genericStart), subActualType);
-        Type[] beforeArg = parse2simpleType(actualType, 0, subRawTypeStart);
-        Type[] endArg = parse2simpleType(actualType, genericEnd + 1, actualType.length());
-        return new ParameterizedTypeImpl(mergeType(beforeArg, subGenType, endArg), null, Class.forName(rawType.trim()));
-    }
-
-    /**
-     * 解析泛型前面的包装类起始坐标
-     *
-     * 如： java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Integer>>
-     * 返回的就是 java.util.List 这个字符串在整个type的起始位置
-     *
-     * @param type              字符串
-     * @param genericStartIndex 泛型的坐标，如上例中 '<' 的位置
-     * @return
-     */
-    private static int getRawTypeIndex(String type, int genericStartIndex) {
-        char tmp;
-        int rawTypeIndex = genericStartIndex - 1;
-        while (--rawTypeIndex > 0) {
-            tmp = type.charAt(rawTypeIndex);
-            if (tmp == '<' || tmp == ',' || tmp == ' ') {
-                break;
+        ImmutablePair<Type, Object> ans;
+        for (IArgParser parse : parseList) {
+            ans = parse.parse(type, value);
+            if (ans != null) {
+                return ans;
             }
         }
 
-        return rawTypeIndex;
+        throw new IllegalInvokeArgumentException("Pare Argument to Object Error! type: " + type + " value: " + value);
     }
 
-    /**
-     * java.util.Map<java.lang.String, java.lang.Integer>
-     *
-     * @param type
-     * @return
-     */
-    private static Type[] parse2simpleType(String type, int start, int end) throws ClassNotFoundException {
-        if (start >= end || end > type.length()) {
-            return EMPTY_TYPE;
+    private static void loadParser() {
+        if (parseList == null) {
+            synchronized (ArgumentParser.class) {
+                if (parseList == null) {
+                    List<IArgParser> tmpParseList = new ArrayList<>(12);
+                    ServiceLoader<IArgParser> list = ServiceLoader.load(IArgParser.class);
+                    for (IArgParser parse : list) {
+                        tmpParseList.add(parse);
+                    }
+                    tmpParseList.sort(null);
+                    parseList = tmpParseList;
+                }
+            }
         }
-
-        return parse2simpleType(type.substring(start, end));
-    }
-
-    private static Type[] parse2simpleType(String type) throws ClassNotFoundException {
-        if (StringUtils.isBlank(type)) {
-            return EMPTY_TYPE;
-        }
-
-        String[] arguments = StringUtils.split(type, ",");
-        Type[] result = new Type[arguments.length];
-        int index = 0;
-        for (String s : arguments) {
-            result[index++] = Class.forName(s.trim());
-        }
-
-        return result;
-    }
-
-    private static Type[] mergeType(Type[] before, Type sub, Type[] end) {
-        Type[] result = new Type[before.length + end.length + 1];
-
-        int offset = before.length;
-        if (offset > 0) {
-            System.arraycopy(before, 0, result, 0, offset);
-        }
-        result[offset] = sub;
-        if (end.length > 0) {
-            System.arraycopy(end, 0, result, offset + 1, end.length);
-        }
-        return result;
     }
 }
+

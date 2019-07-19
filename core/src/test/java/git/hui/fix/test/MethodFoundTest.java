@@ -1,11 +1,13 @@
 package git.hui.fix.test;
 
 
+import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.reflect.ReflectUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.UUID;
 
 /**
@@ -57,7 +59,7 @@ public class MethodFoundTest {
     public void testBasicGetMethod() {
         Class clz = MethodFoundTest.class;
         String method = "rand";
-        Object[] args = new Object[]{"hello", new Integer(123)};
+        Object[] args = new Object[]{"hello", 123};
         System.out.println(getMethod(clz, method, args));
 
         Ac bc = new Bc();
@@ -69,26 +71,32 @@ public class MethodFoundTest {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testReflectMethodGet() {
         Class clz = MethodFoundTest.class;
         String method = "rand";
-        Object[] args = new Object[]{"hello", new Integer(123)};
+
+        ImmutablePair<Type, Object>[] args = new ImmutablePair[2];
+        args[0] = ImmutablePair.of(String.class, "hello");
+        args[1] = ImmutablePair.of(Integer.class, 123);
 
         System.out.println(ReflectUtil.getMethod(clz, method, args));
 
         Ac bc = new Bc();
-        System.out.println(ReflectUtil.getMethod(clz, "pc", new Object[]{bc}));
+        System.out.println(ReflectUtil.getMethod(clz, "pc", new ImmutablePair[]{ImmutablePair.of(Ac.class, bc)}));
 
         Ac ac = new Ac();
-        System.out.println(ReflectUtil.getMethod(clz, "pc", new Object[]{ac}));
+        System.out.println(ReflectUtil.getMethod(clz, "pc", new ImmutablePair[]{ImmutablePair.of(Ac.class, ac)}));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testSuperMethodGet() {
         Class clz = Bc.class;
         String method = "rand";
-        Object[] arg1 = new Object[]{"name", 1};
-        Object[] arg2 = new Object[]{"name"};
+        ImmutablePair<Type, Object>[] arg1 =
+                new ImmutablePair[]{ImmutablePair.of(String.class, "name"), ImmutablePair.of(int.class, 1)};
+        ImmutablePair<Type, Object>[] arg2 = new ImmutablePair[]{ImmutablePair.of(String.class, "name"),};
 
         System.out.println(ReflectUtil.getMethod(clz, method, arg1));
         System.out.println(ReflectUtil.getMethod(clz, method, arg2));
