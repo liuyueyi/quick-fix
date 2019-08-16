@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class Application {
 
     public static void main(String[] args) {
-        System.out.println(" --- ");
+        System.out.println("开启启动jar");
         new Thread(new Runnable() {
             @Override
             public void run() {

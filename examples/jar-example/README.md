@@ -66,9 +66,36 @@
 
 ### 1. 静态类调用方式
 
+**应用启动**
+
+- 方式一：直接借助IDE启动项目
+- 方式二：打一个可执行的jar包并运行
+
+介绍下方式二的使用姿势：
+
+```bash
+# 首先进入jar-example目录
+cd xxx
+
+# 执行项目目录下的 build.sh 脚本
+bash ./build.sh
+
+# 在target目录下，会多一个可执行的jar包: jar-example-1.0-jar-with-dependencies.jar 
+# 运行jar包
+java -jar target/jar-example-1.0-jar-with-dependencies.jar 
+```
+
+jar启动成功之后，控制台会输出
+
+```text
+FixEndpoint is : 9999
+current FixEndPoint is: com.git.hui.fix.core.endpoint.ServletFixEndPoint
+```
+
+**查询测试**
+
 测试静态类的静态成员的方法调用
 
 ```bash
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.jar.server.CalculateServer", "method": "getCache", "params": ["init"], "type":"static"}'
 ```
-
