@@ -101,11 +101,12 @@ public class HttpMessageParser {
         while (!"".equals(line)) {
             kv = StringUtils.split(line, ":");
             assert kv.length == 2;
-            headers.put(kv[0].trim(), kv[1].trim());
+            headers.put(kv[0].trim().toLowerCase(), kv[1].trim());
             line = reader.readLine();
         }
 
         request.setHeaders(headers);
+        System.out.println("headers: " + headers);
     }
 
     /**
@@ -116,16 +117,31 @@ public class HttpMessageParser {
      * @throws IOException
      */
     private static void decodeRequestMessage(BufferedReader reader, Request request) throws IOException {
-        int contentLen = Integer.parseInt(request.getHeaders().getOrDefault("Content-Length", "0"));
-        if (contentLen == 0) {
-            // 表示没有message，直接返回
-            // 如get/options请求就没有message
+        int contentLen = Integer.parseInt(request.getHeaders().getOrDefault("content-length", "-1"));
+        if (contentLen > 0) {
+            char[] message = new char[contentLen];
+            reader.read(message);
+            request.setMessage(new String(message));
             return;
         }
 
-        char[] message = new char[contentLen];
-        reader.read(message);
-        request.setMessage(new String(message));
+        // 如get/options请求就没有message
+        // 表示没有message，直接返回
+        if (contentLen == -1) {
+            return;
+        }
+
+        // fixme 这种时候，可能是通过 chunked 方式发送数据，待验证这种支持方式是否准确
+        StringBuilder message = new StringBuilder();
+        int ch;
+        while (reader.ready()) {
+            ch = reader.read();
+            if (ch <= 0) {
+                break;
+            }
+            message.append((char) ch);
+        }
+        request.setMessage(message.toString());
     }
 
     public static String buildResponse(Request request, String response) {

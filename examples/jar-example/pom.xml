@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.git.hui.fix</groupId>
             <artifactId>fix-core</artifactId>
-            <version>${fix-core.version}</version>
+            <version>1.4.1</version>
         </dependency>
     </dependencies>
 

@@ -37,9 +37,12 @@ public class HttpTask implements Runnable {
             } catch (Exception e) {
                 String httpRes = HttpMessageParser.buildResponse(httpRequest, e.toString());
                 out.print(httpRes);
+                System.out.println("do Inject Call error!");
+                e.printStackTrace();
             }
             out.flush();
         } catch (IOException e) {
+            System.out.println("parse receive request error!" + e);
             e.printStackTrace();
         } finally {
             try {
@@ -56,6 +59,7 @@ public class HttpTask implements Runnable {
      */
     private FixReqDTO parseRequest(HttpMessageParser.Request httpRequest) {
         FixReqDTO request = JSONObject.parseObject(httpRequest.getMessage(), FixReqDTO.class);
+        System.out.println("current request: " + request);
         return request;
     }
 }
