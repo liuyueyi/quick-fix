@@ -7,6 +7,7 @@ import com.git.hui.fix.core.FixEngine;
 import com.google.gson.Gson;
 
 /**
+ * 默认的用于与外界打交道的EndPoint，基于Socket实现的一个简易http服务器
  * Created by @author yihui in 17:10 18/12/29.
  */
 @EndPoint(order = Integer.MAX_VALUE)
@@ -40,10 +41,5 @@ public class ServletFixEndPoint implements FixEndPoint {
     public String call(FixReqDTO reqDTO) {
         //  fixme 这里改成gson进行序列化，使用fastjson序列化时，如果key为int，不会包含在双引号中
         return gson.toJson(FixEngine.instance().execute(reqDTO));
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        ServletFixEndPoint.getInstance();
-        Thread.sleep(20 * 3600);
     }
 }

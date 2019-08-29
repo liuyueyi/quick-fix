@@ -9,6 +9,7 @@ import com.git.hui.fix.api.spi.ServerLoaderBinder;
 import com.git.hui.fix.core.reflect.ArgumentParser;
 import com.git.hui.fix.core.reflect.ReflectUtil;
 import com.git.hui.fix.core.endpoint.EndPointLoader;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,6 +19,7 @@ import java.util.ServiceLoader;
 /**
  * Created by @author yihui in 16:21 18/12/29.
  */
+@Slf4j
 public class FixEngine {
     private static class InnerClass {
         private static final FixEngine INSTANCE = new FixEngine();
@@ -41,6 +43,11 @@ public class FixEngine {
         List<ServerLoader> loaderList = new ArrayList<>(10);
         for (ServerLoaderBinder binder : binders) {
             loaderList.addAll(binder.getBeanLoader());
+            if (log.isDebugEnabled()) {
+                for (ServerLoader loader : binder.getBeanLoader()) {
+                    log.debug("register ServerLoader: {} by {}", loader.getClass(), binder.getClass());
+                }
+            }
         }
 
         serverLoaders = loaderList;

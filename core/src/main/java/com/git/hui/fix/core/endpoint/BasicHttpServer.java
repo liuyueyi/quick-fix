@@ -1,5 +1,7 @@
 package com.git.hui.fix.core.endpoint;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,6 +10,7 @@ import java.util.concurrent.*;
 /**
  * Created by @author yihui in 13:46 18/12/30.
  */
+@Slf4j
 public class BasicHttpServer {
     private static ExecutorService bootstrapExecutor = Executors.newSingleThreadExecutor();
     private static ExecutorService taskExecutor;
@@ -25,7 +28,7 @@ public class BasicHttpServer {
 
                 ServerSocket serverSocket = new ServerSocket(port);
                 bootstrapExecutor.submit(new ServerThread(serverSocket));
-                System.out.println("FixEndpoint is : " + port);
+                log.info("FixEndPoint Port: {}", port);
                 break;
             } catch (Exception e) {
                 try {
@@ -44,7 +47,7 @@ public class BasicHttpServer {
 
         private ServerSocket serverSocket;
 
-        public ServerThread(ServerSocket s) throws IOException {
+        public ServerThread(ServerSocket s) {
             this.serverSocket = s;
         }
 
@@ -56,7 +59,7 @@ public class BasicHttpServer {
                     HttpTask eventTask = new HttpTask(socket);
                     taskExecutor.submit(eventTask);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Some Error In Default ServletFixEndPoint! {}", e);
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException ie) {

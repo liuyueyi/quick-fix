@@ -140,7 +140,7 @@
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>fix-core</artifactId>
-    <version>1.3</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 
@@ -169,7 +169,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-fixer</artifactId>
-    <version>1.3</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 
@@ -212,7 +212,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-mvc-fixer</artifactId>
-    <version>1.3</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 
@@ -235,7 +235,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 <dependency>
     <groupId>com.git.hui.fix</groupId>
     <artifactId>spring-cloud-fixer</artifactId>
-    <version>1.3</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 
@@ -278,6 +278,14 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 - [issues #5](https://github.com/liuyueyi/quick-fix/issues/5) 解决传参为null的场景支持
 - 项目[spring-mvc-example](examples/spring-mvc-example) 新增枚举类传参的示例demo
 
+**v1.4.1**
+
+- 修复`com.git.hui.fix.core.endpoint.HttpMessageParser`请求头在不同环境下可能大小写不一致的问题
+
+**v1.4.2**
+
+- 添加日志埋点
+
  
 ### 其他
 
@@ -288,7 +296,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 尽信书则不如，已上内容，一家之言，因个人能力有限，难免有疏漏和错误之处，如发现bug或者有更好的建议，欢迎批评指正，不吝感激
 
 - 微博地址: 小灰灰Blog
-- QQ： 一灰灰/3302797840
+- QQ： 一灰灰/3302797840； 交流群： 864706093
 - WeChat: 一灰/liuyueyi25
 
 ### 扫描关注

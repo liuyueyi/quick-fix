@@ -1,6 +1,7 @@
 package com.git.hui.fix.core.endpoint;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -12,6 +13,7 @@ import java.util.Map;
  *
  * Created by @author yihui in 11:35 18/12/30.
  */
+@Slf4j
 public class HttpMessageParser {
 
     @Data
@@ -106,7 +108,9 @@ public class HttpMessageParser {
         }
 
         request.setHeaders(headers);
-        System.out.println("headers: " + headers);
+        if (log.isDebugEnabled()) {
+            log.info("request header: {}", headers);
+        }
     }
 
     /**

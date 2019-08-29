@@ -20,7 +20,18 @@
         <dependency>
             <groupId>com.git.hui.fix</groupId>
             <artifactId>fix-core</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.12.1</version>
         </dependency>
     </dependencies>
 

@@ -2,6 +2,7 @@ package com.git.hui.fix.core.endpoint;
 
 import com.git.hui.fix.api.constants.EndPoint;
 import com.git.hui.fix.api.spi.FixEndPoint;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.*;
  * FixEndPoint加载器，这里不适用jdk自带的加载器的原因在于我们获取
  * Created by @author yihui in 19:45 18/12/30.
  */
+@Slf4j
 public class EndPointLoader {
     private static final String PREFIX = "META-INF/services/";
     private static final Class<FixEndPoint> SERVICE = FixEndPoint.class;
@@ -100,7 +102,7 @@ public class EndPointLoader {
             }
         }
 
-        System.out.println("current FixEndPoint is: " + selectClz.getName());
+        log.info("current FixEndPoint is: {}", selectClz.getName());
     }
 
 }

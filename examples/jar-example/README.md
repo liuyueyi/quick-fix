@@ -47,6 +47,12 @@
 引入上面依赖之后，如无问题，会暴露一个http接口 `/inject-fixer-endpoint/call`，用于接收外部请求，执行内部服务方法；在实际的使用过程中，需要注意加上安全校验相关的逻辑
 
 - **默认开启的端口号是 9999, 可以通过设置jvm参数 `-Dquick.fix.port` 来重设对应的端口号**
+
+    ```bash
+    # 比如指定端口为8080可以如下
+    java -Dquick.fix.port=8080  -jar target/jar-example-1.0-jar-with-dependencies.jar
+    ```
+
 - 在项目开头，需要主动调用一下  `FixEngine.instance();` 进行初始化
 
 ## II. 测试实例

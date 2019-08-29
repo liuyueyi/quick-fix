@@ -14,7 +14,7 @@ public class DefaultServerBinder implements ServerLoaderBinder {
 
     @Override
     public List<ServerLoader> getBeanLoader() {
-        List<ServerLoader> list = new ArrayList<>(10);
+        List<ServerLoader> list = new ArrayList<>(1);
         list.add(new StaticServerLoader());
         return list;
     }
