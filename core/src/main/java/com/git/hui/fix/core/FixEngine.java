@@ -3,10 +3,11 @@ package com.git.hui.fix.core;
 import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.exception.ServerNotFoundException;
 import com.git.hui.fix.api.loader.ServerLoader;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
+import com.git.hui.fix.api.modal.OgnlReqDTO;
 import com.git.hui.fix.api.spi.ServerLoaderBinder;
-import com.git.hui.fix.core.reflect.ArgumentParser;
+import com.git.hui.fix.core.ognl.OgnlFacade;
 import com.git.hui.fix.core.reflect.ReflectUtil;
 import com.git.hui.fix.core.endpoint.EndPointLoader;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class FixEngine {
 
     private FixEngine() {
         initAllServerLoads();
+        initOgnlContext();
         selectFixEndPoint();
     }
 
@@ -55,6 +57,10 @@ public class FixEngine {
         serverLoaders.sort(Comparator.comparingInt(ServerLoader::order));
     }
 
+    private void initOgnlContext() {
+        OgnlFacade.instance().init(serverLoaders);
+    }
+
     /**
      * 选择服务侵入端点
      */
@@ -62,7 +68,13 @@ public class FixEngine {
         EndPointLoader.autoLoadEndPoint();
     }
 
-    public Object execute(FixReqDTO req) {
+    /**
+     * 反射表达式执行
+     *
+     * @param req
+     * @return
+     */
+    public Object execute(ReflectReqDTO req) {
         ImmutablePair<Object, Class> invokeObjPair = null;
         for (ServerLoader loader : serverLoaders) {
             if (loader.enable(req)) {
@@ -78,8 +90,17 @@ public class FixEngine {
         return doExecute(invokeObjPair.getLeft(), invokeObjPair.getRight(), req);
     }
 
-    private Object doExecute(Object invokeObject, Class invokeClass, FixReqDTO req) {
+    private Object doExecute(Object invokeObject, Class invokeClass, ReflectReqDTO req) {
         return ReflectUtil.execute(invokeObject, invokeClass, req);
     }
 
+    /**
+     * ognl表达式执行
+     *
+     * @param req
+     * @return
+     */
+    public Object execute(OgnlReqDTO req) {
+        return OgnlFacade.instance().execute(req);
+    }
 }

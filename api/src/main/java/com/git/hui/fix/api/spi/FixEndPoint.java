@@ -2,7 +2,8 @@ package com.git.hui.fix.api.spi;
 
 import com.git.hui.fix.api.constants.EndPoint;
 import com.git.hui.fix.api.constants.LoaderOrder;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
+import com.git.hui.fix.api.modal.OgnlReqDTO;
 
 /**
  * 对外暴露的服务端点，接收外部的请求数据，并返回执行后的结果
@@ -32,5 +33,13 @@ public interface FixEndPoint {
      * @param reqDTO
      * @return
      */
-    String call(FixReqDTO reqDTO);
+    String call(ReflectReqDTO reqDTO);
+
+    /**
+     * 对外暴露的方法，接收外部的ognl表达式，返回执行后的结果
+     *
+     * @param reqDTO
+     * @return
+     */
+    String ognl(OgnlReqDTO reqDTO);
 }

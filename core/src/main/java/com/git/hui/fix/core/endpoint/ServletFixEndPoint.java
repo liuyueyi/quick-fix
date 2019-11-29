@@ -1,7 +1,8 @@
 package com.git.hui.fix.core.endpoint;
 
 import com.git.hui.fix.api.constants.EndPoint;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
+import com.git.hui.fix.api.modal.OgnlReqDTO;
 import com.git.hui.fix.api.spi.FixEndPoint;
 import com.git.hui.fix.core.FixEngine;
 import com.google.gson.Gson;
@@ -38,8 +39,13 @@ public class ServletFixEndPoint implements FixEndPoint {
     private Gson gson = new Gson();
 
     @Override
-    public String call(FixReqDTO reqDTO) {
+    public String call(ReflectReqDTO reqDTO) {
         //  fixme 这里改成gson进行序列化，使用fastjson序列化时，如果key为int，不会包含在双引号中
+        return gson.toJson(FixEngine.instance().execute(reqDTO));
+    }
+
+    @Override
+    public String ognl(OgnlReqDTO reqDTO) {
         return gson.toJson(FixEngine.instance().execute(reqDTO));
     }
 }
