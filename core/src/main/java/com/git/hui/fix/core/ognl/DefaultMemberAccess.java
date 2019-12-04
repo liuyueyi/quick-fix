@@ -1,5 +1,6 @@
 package com.git.hui.fix.core.ognl;
 
+import lombok.Setter;
 import ognl.MemberAccess;
 
 import java.lang.reflect.AccessibleObject;
@@ -10,17 +11,12 @@ import java.util.Map;
 /**
  * Created by @author yihui in 17:02 19/11/4.
  */
+@Setter
 public class DefaultMemberAccess implements MemberAccess {
     private boolean allowPrivateAccess = false;
-
     private boolean allowProtectedAccess = false;
-
     private boolean allowPackageProtectedAccess = false;
 
-    /*
-     * =================================================================== Constructors
-     * ===================================================================
-     */
     public DefaultMemberAccess(boolean allowAllAccess) {
         this(allowAllAccess, allowAllAccess, allowAllAccess);
     }
@@ -33,38 +29,7 @@ public class DefaultMemberAccess implements MemberAccess {
         this.allowPackageProtectedAccess = allowPackageProtectedAccess;
     }
 
-    /*
-     * =================================================================== Public methods
-     * ===================================================================
-     */
-    public boolean getAllowPrivateAccess() {
-        return allowPrivateAccess;
-    }
-
-    public void setAllowPrivateAccess(boolean value) {
-        allowPrivateAccess = value;
-    }
-
-    public boolean getAllowProtectedAccess() {
-        return allowProtectedAccess;
-    }
-
-    public void setAllowProtectedAccess(boolean value) {
-        allowProtectedAccess = value;
-    }
-
-    public boolean getAllowPackageProtectedAccess() {
-        return allowPackageProtectedAccess;
-    }
-
-    public void setAllowPackageProtectedAccess(boolean value) {
-        allowPackageProtectedAccess = value;
-    }
-
-    /*
-     * =================================================================== MemberAccess interface
-     * ===================================================================
-     */
+    @Override
     public Object setup(Map context, Object target, Member member, String propertyName) {
         Object result = null;
 
@@ -79,6 +44,7 @@ public class DefaultMemberAccess implements MemberAccess {
         return result;
     }
 
+    @Override
     public void restore(Map context, Object target, Member member, String propertyName, Object state) {
         if (state != null) {
             ((AccessibleObject) member).setAccessible((Boolean) state);
@@ -88,21 +54,17 @@ public class DefaultMemberAccess implements MemberAccess {
     /**
      * Returns true if the given member is accessible or can be made accessible by this object.
      */
+    @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         int modifiers = member.getModifiers();
-        boolean result = Modifier.isPublic(modifiers);
-
-        if (!result) {
-            if (Modifier.isPrivate(modifiers)) {
-                result = getAllowPrivateAccess();
-            } else {
-                if (Modifier.isProtected(modifiers)) {
-                    result = getAllowProtectedAccess();
-                } else {
-                    result = getAllowPackageProtectedAccess();
-                }
-            }
+        if (Modifier.isPublic(modifiers)) {
+            return true;
+        } else if (Modifier.isPrivate(modifiers)) {
+            return this.allowPrivateAccess;
+        } else if (Modifier.isProtected(modifiers)) {
+            return this.allowProtectedAccess;
+        } else {
+            return this.allowPackageProtectedAccess;
         }
-        return result;
     }
 }

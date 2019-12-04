@@ -1,4 +1,4 @@
-package git.hui.fix.test.ognl.model;
+package git.hui.fix.test.ognl.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

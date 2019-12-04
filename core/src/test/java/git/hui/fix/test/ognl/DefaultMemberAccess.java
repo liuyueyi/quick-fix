@@ -17,10 +17,6 @@ public class DefaultMemberAccess implements MemberAccess {
 
     private boolean allowPackageProtectedAccess = false;
 
-    /*
-     * =================================================================== Constructors
-     * ===================================================================
-     */
     public DefaultMemberAccess(boolean allowAllAccess) {
         this(allowAllAccess, allowAllAccess, allowAllAccess);
     }

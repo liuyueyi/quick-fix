@@ -1,9 +1,11 @@
 package git.hui.fix.test.ognl.bean;
 
 import com.alibaba.fastjson.JSON;
-import git.hui.fix.test.ognl.model.ADemo;
 import git.hui.fix.test.ognl.model.OgnlEnum;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by @author yihui in 16:47 19/11/4.
@@ -43,5 +45,13 @@ public class PrintDemo {
 
     public void show(Class clz) {
         System.out.println(clz.getName());
+    }
+
+    public void print(List<Integer> args) {
+        System.out.println(args);
+    }
+
+    public void print(Map<String, Integer> args) {
+        System.out.println(args);
     }
 }
