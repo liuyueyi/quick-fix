@@ -206,8 +206,25 @@ public class OgnlTest {
         ans = Ognl.getValue(Ognl.parseExpression("1 + 3 + 4"), context, context.getRoot());
         System.out.println("表达式执行: " + ans);
 
-        ans = Ognl.getValue(Ognl.parseExpression("#fact = :[#this<=1? 1 : #this*#fact(#this-1)], #fact(3)"), context, context.getRoot());
+        ans = Ognl.getValue(Ognl.parseExpression("#fact = :[#this<=1? 1 : #this*#fact(#this-1)], #fact(3)"), context,
+                context.getRoot());
         System.out.println("lambda执行: " + ans);
+
+        //        内部类的使用姿势
+        ans = Ognl.getValue(Ognl.parseExpression("@git.hui.fix.test.ognl.OgnlTest$InnerClz@class"), context,
+                context.getRoot());
+        System.out.println("内部类: " + ans);
+
+        // 静态类成员修改
+        ans = Ognl.getValue(
+                Ognl.parseExpression("@git.hui.fix.test.ognl.OgnlTest$InnerClz@class.getField(\"age\").set(null, 30)"),
+                context, context.getRoot());
+        System.out.println("静态成员: " + ans);
+    }
+
+
+    public static class InnerClz {
+        public static Integer age = 10;
     }
 
 }
