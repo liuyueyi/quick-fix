@@ -1,7 +1,8 @@
 package com.git.hui.fix.springcloud.endpoint;
 
 import com.git.hui.fix.api.constants.EndPoint;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
+import com.git.hui.fix.api.modal.OgnlReqDTO;
 import com.git.hui.fix.api.spi.FixEndPoint;
 import com.git.hui.fix.core.FixEngine;
 import com.google.gson.Gson;
@@ -21,7 +22,18 @@ public class ActuateFixEndPoint implements FixEndPoint {
 
     @Override
     @PostMapping(path = "call")
-    public String call(@RequestBody FixReqDTO reqDTO) {
+    public String call(@RequestBody ReflectReqDTO reqDTO) {
+        try {
+            Object obj = FixEngine.instance().execute(reqDTO);
+            return gson.toJson(obj);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    @Override
+    @PostMapping(path = "ognl")
+    public String ognl(OgnlReqDTO reqDTO) {
         try {
             Object obj = FixEngine.instance().execute(reqDTO);
             return gson.toJson(obj);

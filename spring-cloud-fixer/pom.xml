@@ -10,14 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-fixer</artifactId>
-    <version>1.4.2</version>
+    <version>1.5.0-SNAPSHOT</version>
 
 
     <dependencies>
         <dependency>
             <groupId>com.git.hui.fix</groupId>
             <artifactId>spring-fixer</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

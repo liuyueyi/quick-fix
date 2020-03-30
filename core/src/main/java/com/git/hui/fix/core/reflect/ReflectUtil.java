@@ -3,14 +3,12 @@ package com.git.hui.fix.core.reflect;
 import com.alibaba.fastjson.JSON;
 import com.git.hui.fix.api.exception.ServerInvokedException;
 import com.git.hui.fix.api.exception.ServerNotFoundException;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.util.StringUtils;
-import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 /**
@@ -163,7 +161,7 @@ public class ReflectUtil {
         }
     }
 
-    public static Object execute(Object target, Class clz, FixReqDTO req) {
+    public static Object execute(Object target, Class clz, ReflectReqDTO req) {
         ImmutablePair<Type, Object>[] args = ArgumentParser.parse(req.getParams());
         target = execute(target, clz, req.getMethod(), args);
 

@@ -1,7 +1,7 @@
 package com.git.hui.fix.api.loader;
 
 import com.git.hui.fix.api.constants.LoaderOrder;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
 
 /**
@@ -30,7 +30,7 @@ public interface ServerLoader {
      * @param reqDTO
      * @return
      */
-    boolean enable(FixReqDTO reqDTO);
+    boolean enable(ReflectReqDTO reqDTO);
 
     /**
      * 根据传入参数，获取目标对象和目标对象的class
@@ -38,6 +38,9 @@ public interface ServerLoader {
      * @param reqDTO
      * @return
      */
-    ImmutablePair</** 目标对象 */Object, /*** 目标对象类型 */Class> getInvokeObject(FixReqDTO reqDTO);
+    ImmutablePair</** 目标对象 */Object, /*** 目标对象类型 */Class> getInvokeObject(ReflectReqDTO reqDTO);
+
+
+    Object getInvokeObject(String key);
 
 }

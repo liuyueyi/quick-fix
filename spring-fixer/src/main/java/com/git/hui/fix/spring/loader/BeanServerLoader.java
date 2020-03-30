@@ -1,11 +1,9 @@
 package com.git.hui.fix.spring.loader;
 
 import com.git.hui.fix.api.exception.ServerNotFoundException;
-import com.git.hui.fix.api.loader.ServerLoader;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.loader.ServerLoaderTemplate;
-import com.git.hui.fix.core.reflect.ReflectUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
@@ -22,8 +20,13 @@ public class BeanServerLoader extends ServerLoaderTemplate {
     }
 
     @Override
-    public boolean enable(FixReqDTO reqDTO) {
+    public boolean enable(ReflectReqDTO reqDTO) {
         return StringUtils.isEmpty(reqDTO.getType()) || BEAN_TYPE.equalsIgnoreCase(reqDTO.getType().trim());
+    }
+
+    @Override
+    public Object getInvokeObject(String key) {
+        return applicationContext.getBean(key);
     }
 
     private boolean beanName(String server) {

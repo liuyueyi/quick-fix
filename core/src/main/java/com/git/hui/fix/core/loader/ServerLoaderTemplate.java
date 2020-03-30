@@ -2,7 +2,7 @@ package com.git.hui.fix.core.loader;
 
 import com.git.hui.fix.api.exception.ServerNotFoundException;
 import com.git.hui.fix.api.loader.ServerLoader;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
 import com.git.hui.fix.api.modal.ImmutablePair;
 import com.git.hui.fix.core.reflect.ReflectUtil;
 import com.git.hui.fix.core.util.StringUtils;
@@ -15,7 +15,7 @@ import com.git.hui.fix.core.util.StringUtils;
 public abstract class ServerLoaderTemplate implements ServerLoader {
 
     @Override
-    public ImmutablePair<Object, Class> getInvokeObject(FixReqDTO reqDTO) {
+    public ImmutablePair<Object, Class> getInvokeObject(ReflectReqDTO reqDTO) {
         ImmutablePair<Object, Class> serverPair = loadServicePair(reqDTO.getService());
 
         if (StringUtils.isEmpty(reqDTO.getField())) {
@@ -33,7 +33,7 @@ public abstract class ServerLoaderTemplate implements ServerLoader {
      */
     public abstract ImmutablePair<Object, Class> loadServicePair(String service);
 
-    public ImmutablePair<Object, Class> loadFieldPair(FixReqDTO reqDTO, ImmutablePair<Object, Class> serverPair) {
+    public ImmutablePair<Object, Class> loadFieldPair(ReflectReqDTO reqDTO, ImmutablePair<Object, Class> serverPair) {
         try {
             return ReflectUtil.getField(serverPair.getLeft(), serverPair.getRight(), reqDTO.getField());
         } catch (Exception e) {

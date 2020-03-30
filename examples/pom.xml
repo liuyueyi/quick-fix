@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <fix-core.version>1.4</fix-core.version>
+        <fix-core.version>1.5.0-SNAPSHOT</fix-core.version>
     </properties>
 
     <build>

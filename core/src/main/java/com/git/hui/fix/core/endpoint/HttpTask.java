@@ -1,7 +1,8 @@
 package com.git.hui.fix.core.endpoint;
 
 import com.alibaba.fastjson.JSONObject;
-import com.git.hui.fix.api.modal.FixReqDTO;
+import com.git.hui.fix.api.modal.ReflectReqDTO;
+import com.git.hui.fix.api.modal.OgnlReqDTO;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -31,15 +32,24 @@ public class HttpTask implements Runnable {
             PrintWriter out = new PrintWriter(outputStream);
 
             HttpMessageParser.Request httpRequest = HttpMessageParser.parse2request(socket.getInputStream());
-            FixReqDTO request = parseRequest(httpRequest);
+            Object req = null;
             try {
-                String result = ServletFixEndPoint.getInstance().call(request);
+                String result;
+                if (httpRequest.getUri().endsWith("ognl")) {
+                    OgnlReqDTO request = parseRequest(httpRequest, OgnlReqDTO.class);
+                    req = request;
+                    result = ServletFixEndPoint.getInstance().ognl(request);
+                } else {
+                    ReflectReqDTO request = parseRequest(httpRequest, ReflectReqDTO.class);
+                    req = request;
+                    result = ServletFixEndPoint.getInstance().call(request);
+                }
                 String httpRes = HttpMessageParser.buildResponse(httpRequest, result);
                 out.print(httpRes);
             } catch (Exception e) {
                 String httpRes = HttpMessageParser.buildResponse(httpRequest, e.toString());
                 out.print(httpRes);
-                log.warn("Failed to execute Inject method! req:{}, e: {}", request, e);
+                log.warn("Failed to execute Inject method! req:{}, e: {}", req, e);
             }
             out.flush();
         } catch (IOException e) {
@@ -57,8 +67,8 @@ public class HttpTask implements Runnable {
      * @param httpRequest
      * @return
      */
-    private FixReqDTO parseRequest(HttpMessageParser.Request httpRequest) {
-        FixReqDTO request = JSONObject.parseObject(httpRequest.getMessage(), FixReqDTO.class);
+    private <T> T parseRequest(HttpMessageParser.Request httpRequest, Class<T> clz) {
+        T request = JSONObject.parseObject(httpRequest.getMessage(), clz);
         if (log.isDebugEnabled()) {
             log.debug("current request: {}", request);
         }

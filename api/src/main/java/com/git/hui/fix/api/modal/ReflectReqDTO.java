@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FixReqDTO implements Serializable {
+public class ReflectReqDTO implements Serializable {
     private static final long serialVersionUID = -151408688916877734L;
     /**
      * 调用的服务名，.class 结尾，则表示根据类型查找Spring容器中的Bean；否则表示传入的为beanName，通过name方式查找Spring容器中的Bean
