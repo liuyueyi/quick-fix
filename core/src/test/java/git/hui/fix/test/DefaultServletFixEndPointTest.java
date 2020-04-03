@@ -1,6 +1,6 @@
 package git.hui.fix.test;
 
-import com.git.hui.fix.core.endpoint.ServletFixEndPoint;
+import com.github.liuyueyi.fix.core.endpoint.ServletFixEndPoint;
 
 /**
  * Created by @author yihui in 15:43 19/8/29.

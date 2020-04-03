@@ -95,7 +95,7 @@ jar启动成功之后，控制台会输出
 
 ```text
 FixEndpoint is : 9999
-current FixEndPoint is: com.git.hui.fix.core.endpoint.ServletFixEndPoint
+current FixEndPoint is: ServletFixEndPoint
 ```
 
 **查询测试**
@@ -103,5 +103,5 @@ current FixEndPoint is: com.git.hui.fix.core.endpoint.ServletFixEndPoint
 测试静态类的静态成员的方法调用
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.jar.server.CalculateServer", "method": "getCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "CalculateServer", "method": "getCache", "params": ["init"], "type":"static"}'
 ```

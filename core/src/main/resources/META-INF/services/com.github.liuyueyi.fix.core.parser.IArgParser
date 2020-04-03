@@ -1,0 +1,14 @@
+com.github.liuyueyi.fix.core.parser.BigIntegerParser
+com.github.liuyueyi.fix.core.parser.BigDecimalParser
+com.github.liuyueyi.fix.core.parser.BooleanParser
+com.github.liuyueyi.fix.core.parser.ByteParser
+com.github.liuyueyi.fix.core.parser.CharParser
+com.github.liuyueyi.fix.core.parser.ClassParser
+com.github.liuyueyi.fix.core.parser.DoubleParser
+com.github.liuyueyi.fix.core.parser.EnumParser
+com.github.liuyueyi.fix.core.parser.FloatParser
+com.github.liuyueyi.fix.core.parser.IntegerParser
+com.github.liuyueyi.fix.core.parser.JsonObjectParser
+com.github.liuyueyi.fix.core.parser.LongParser
+com.github.liuyueyi.fix.core.parser.ShortParser
+com.github.liuyueyi.fix.core.parser.StringParser

@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.git.hui.fix.spring.FixerAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.liuyueyi.fix.spring.FixerAutoConfig

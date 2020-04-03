@@ -16,7 +16,7 @@
 
 <dependencies>
     <dependency>
-        <groupId>com.git.hui.fix</groupId>
+        <groupId>com.github.liuyueyi.fix</groupId>
         <artifactId>spring-mvc-fixer</artifactId>
         <version>1.3</version>
     </dependency>
@@ -35,7 +35,7 @@
 
 <dependencies>
     <dependency>
-        <groupId>com.git.hui.fix</groupId>
+        <groupId>com.github.liuyueyi.fix</groupId>
         <artifactId>spring-mvc-fixer</artifactId>
         <version>1.3</version>
     </dependency>
@@ -76,7 +76,11 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 # 执行bean的属性的某个方法
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "demoBean", "field": "values", "method":"add", "params": ["autoInsertByQuickFixer!"]}'
 
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.DemoBean", "field": "values", "method":"get", "params": ["int#0"]}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.DemoBean", "field": "values", "method":"get", "params": ["int#0"]}'
+
+
+# ongl方式访问
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/ognl -d '{"expression": "#demoBean.randName()"}'
 ```
 
 
@@ -85,16 +89,24 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 测试静态类的静态成员的方法调用
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "put","field":"localCache", "params": ["init","BigDecimal#10"], "type":"static"}'
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "get","field":"localCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "put","field":"localCache", "params": ["init","BigDecimal#10"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "get","field":"localCache", "params": ["init"], "type":"static"}'
+
+
+# ognl方式访问
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/ognl -d '{"expression": "@com.github.liuyueyi.fix.example.springmvc.rest.StaticBean@localCache.put(\"dd\", new java.math.BigDecimal(12.1))"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/ognl -d '{"expression": "@com.github.liuyueyi.fix.example.springmvc.rest.StaticBean@localCache.get(\"dd\")"}'
 ```
 
 
 测试静态类的静态方法调用
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "updateCache", "params": ["init","BigDecimal#3"], "type":"static"}'
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "updateCache", "params": ["init","BigDecimal#3"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
+
+# ognl访问方式
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/ognl -d '{"expression": "@com.github.liuyueyi.fix.example.springmvc.rest.StaticBean@getCache(\"dd\")"}'
 ```
 
 测试静态类的静态成员的父类方法
@@ -111,7 +123,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 一个简单的测试case
 
 ```java
-package com.git.hui.fix.example.springmvc.rest;
+package com.github.liuyueyi.fix.example.springmvc.rest;
 
 /**
  * Created by @author yihui in 19:45 19/7/5.
@@ -135,7 +147,7 @@ public class SingletonBean {
 如果我们需要执行上面的 `sayHello`方法，可以如下
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
 ```
 
 ### 4. 调用类的方法的方法
@@ -145,7 +157,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 针对静态类
 
 ```java
-package com.git.hui.fix.example.springmvc.rest;
+package com.github.liuyueyi.fix.example.springmvc.rest;
 
 
 import com.google.common.cache.CacheBuilder;
@@ -210,12 +222,12 @@ public class StaticBean {
 如果我希望通过调用 `StaticBean.getLocalCache`来获取内部对象，然后再调用内部对象的方法或属性时，可以如下操作
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getLocalCache", "secondMethod": "get", "secondParams": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "getLocalCache", "secondMethod": "get", "secondParams": ["init"], "type":"static"}'
 ```
 
 针对`innerBean`的访问，可以如下
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondMethod": "getName", "secondParams": [], "type":"static"}'
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondField": "name", "secondParams": [], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondMethod": "getName", "secondParams": [], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.github.liuyueyi.fix.example.springmvc.rest.StaticBean", "method": "getInnerBean", "secondField": "name", "secondParams": [], "type":"static"}'
 ```

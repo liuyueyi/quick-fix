@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <version>2.2.1.RELEASE</version>
         <relativePath/>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,9 +15,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.git.hui.fix</groupId>
+            <groupId>com.github.liuyueyi.fix</groupId>
             <artifactId>spring-mvc-fixer</artifactId>
-            <version>1.5.0-SNAPSHOT</version>
+            <version>2.0</version>
         </dependency>
 
         <dependency>
@@ -71,9 +71,9 @@
 
     <repositories>
         <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release-local</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
