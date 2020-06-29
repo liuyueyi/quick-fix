@@ -80,8 +80,8 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/actuator/i
 测试静态类的静态成员的方法调用
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/actuator/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springcloud.server.StaticBean", "method": "put","field":"localCache", "params": ["init","BigDecimal#10"], "type":"static"}'
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/actuator/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springcloud.server.StaticBean", "method": "get","field":"localCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/actuator/inject-fixer-endpoint/call -d StaticBean
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/actuator/inject-fixer-endpoint/call -d StaticBean
 ```
 
 

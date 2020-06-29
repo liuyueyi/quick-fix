@@ -80,5 +80,5 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 测试静态类的静态成员的方法调用
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.spring.server.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
 ```

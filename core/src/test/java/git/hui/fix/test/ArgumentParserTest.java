@@ -1,7 +1,7 @@
 package git.hui.fix.test;
 
 import com.alibaba.fastjson.JSON;
-import com.git.hui.fix.core.reflect.ArgumentParser;
+import com.github.liuyueyi.fix.core.reflect.ArgumentParser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

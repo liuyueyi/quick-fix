@@ -1,8 +1,8 @@
 package git.hui.fix.test;
 
 
-import com.git.hui.fix.api.modal.ImmutablePair;
-import com.git.hui.fix.core.reflect.ReflectUtil;
+import com.github.liuyueyi.fix.api.modal.ImmutablePair;
+import com.github.liuyueyi.fix.core.reflect.ReflectUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Method;

@@ -154,7 +154,7 @@
 使用姿势如下：
 
 ```bash
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.jar.server.CalculateServer", "method": "getCache", "params": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "CalculateServer", "method": "getCache", "params": ["init"], "type":"static"}'
 ```
 
 实例demo:
@@ -196,7 +196,7 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 curl -X POST -H "Content-Type:application/json" http://127.0.0.1:9999/fixer/call -d '{"service": "com.git.hui.fix.example.spring.server.StaticBean", "method": "getCache", "params": ["init"], "type":"static"}'
 
 # 单例类的使用姿势
-curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "com.git.hui.fix.example.springmvc.rest.SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fixer-endpoint/call -d '{"service": "SingletonBean", "method": "getInstance", "secondMethod": "sayHello", "secondParams": ["init"], "type":"static"}'
 ```
 
 实例demo:
@@ -274,13 +274,13 @@ curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8080/inject-fix
 
 - [issues #4](https://github.com/liuyueyi/quick-fix/issues/4) 支持参数解析的扩展
     - 默认提供八种基本数据类型，BigInteger, BigDecimal, Class, Enum, Json格式POJO对象的参数转换
-    - 通过JDK SPI方式，加载自定义的继承自`com.git.hui.fix.core.parser.IArgParser`的参数解析器 
+    - 通过JDK SPI方式，加载自定义的继承自`IArgParser`的参数解析器 
 - [issues #5](https://github.com/liuyueyi/quick-fix/issues/5) 解决传参为null的场景支持
 - 项目[spring-mvc-example](examples/spring-mvc-example) 新增枚举类传参的示例demo
 
 **v1.4.1**
 
-- 修复`com.git.hui.fix.core.endpoint.HttpMessageParser`请求头在不同环境下可能大小写不一致的问题
+- 修复`HttpMessageParser`请求头在不同环境下可能大小写不一致的问题
 
 **v1.4.2**
 

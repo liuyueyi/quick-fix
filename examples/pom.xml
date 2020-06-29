@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>com.github.liuyueyi.fix</groupId>
         <artifactId>quick-fix</artifactId>
-        <groupId>com.git.hui.fix</groupId>
-        <version>1.0</version>
+        <version>2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <fix-core.version>1.5.0-SNAPSHOT</fix-core.version>
+        <fix-core.version>2.0</fix-core.version>
     </properties>
 
     <build>
